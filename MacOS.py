@@ -3,26 +3,15 @@ import numpy as np
 import time
 import tkinter as tk
 from tkinter import messagebox
-import platform
 import subprocess
-from plyer import notification
 
-# Function to show system notification for posture reminder (cross-platform)
+# Function to show macOS notification for posture reminder
 def show_posture_reminder():
-    system = platform.system()
-    
-    if system == "Darwin":  # macOS
-        message = "Please adjust your posture!"
-        title = "Posture Reminder"
-        # Use AppleScript to show notification on macOS
-        script = f'display notification "{message}" with title "{title}"'
-        subprocess.run(["osascript", "-e", script])
-    elif system == "Windows":  # Windows
-        notification.notify(
-            title="Posture Reminder",
-            message="Please adjust your posture!",
-            timeout=2.5  # The notification will disappear after 2.5 seconds
-        )
+    message = "Please adjust your posture!"
+    title = "Posture Reminder"
+    # Use AppleScript to show notification
+    script = f'display notification "{message}" with title "{title}"'
+    subprocess.run(["osascript", "-e", script])
 
 def get_avg_head_height(faces):
     """ Returns the average head height from the detected faces. """
@@ -73,8 +62,8 @@ def start_posture_reminder():
                     cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
                     current_head_position = y
 
-                # Only check posture if the baseline is set
-                if baseline_head_height is not None and baseline_head_position is not None:
+                # Check if the baseline is set
+                if baseline_head_height is not None:
                     # Check if the user is slouching or leaning too close
                     current_time = time.time()  # Get the current time
                     if (avg_head_height < baseline_head_height - 60 or 
@@ -82,7 +71,7 @@ def start_posture_reminder():
                         (current_time - last_reminder_time > cooldown_period):
                         # Show reminder to fix posture if the cooldown period has passed
                         print("Warning: Please adjust your posture!")
-                        show_posture_reminder()  # Trigger system notification
+                        show_posture_reminder()  # Trigger macOS notification
                         last_reminder_time = current_time  # Update the last reminder time
 
         # Add the quit message overlay
@@ -110,7 +99,6 @@ def start_posture_reminder_gui():
     start_posture_reminder()  # Run the posture reminder directly in the main thread
 
 def show_how_to_use():
-    # Display a message with instructions on how to use the app
     messagebox.showinfo("How to Use", "1. Press 'Use' to start posture reminder.\n2. Follow the instructions to set your ideal posture.\n3. The program will remind you to adjust your posture when needed.")
 
 def exit_program():
