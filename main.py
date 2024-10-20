@@ -77,7 +77,8 @@ def start_posture_reminder():
                 if baseline_head_height is not None and baseline_head_position is not None:
                     # Check if the user is slouching or leaning too close
                     current_time = time.time()  # Get the current time
-                    if (avg_head_height < baseline_head_height - 60 or 
+                    if (avg_head_height is not None and 
+                        avg_head_height < baseline_head_height - 60 or 
                         current_head_position > baseline_head_position + 60) and \
                         (current_time - last_reminder_time > cooldown_period):
                         # Show reminder to fix posture if the cooldown period has passed
