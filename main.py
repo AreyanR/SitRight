@@ -109,11 +109,15 @@ def exit_program():
 # Create the main application window using customtkinter
 root = ctk.CTk()
 root.title("Posture Reminder Application")
-root.geometry("400x300")
+root.geometry("600x400")
 
 # Add a frame to organize buttons
 frame = ctk.CTkFrame(master=root)
 frame.pack(pady=20, padx=20, fill="both", expand=True)
+
+# Add a title label at the top of the frame
+title_label = ctk.CTkLabel(frame, text="Posture Reminder", font=("Arial", 20))
+title_label.pack(pady=10)
 
 # Add buttons in the frame
 use_button = ctk.CTkButton(frame, text="Use", command=start_posture_reminder_gui, height=40, width=200)
