@@ -75,8 +75,8 @@ def start_posture_reminder(cap, face_cascade):
             if baseline_head_height is not None and baseline_head_position is not None:
                 current_time = time.time()
                 if (avg_head_height is not None and 
-                    avg_head_height < baseline_head_height - 60 or 
-                    current_head_position > baseline_head_position + 60) and \
+                    avg_head_height < baseline_head_height - 30 or 
+                    current_head_position > baseline_head_position + 30) and \
                     (current_time - last_reminder_time > cooldown_period):
                     print("Warning: Please adjust your posture!")
                     show_posture_reminder()
