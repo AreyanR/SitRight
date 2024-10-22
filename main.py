@@ -6,6 +6,7 @@ import platform
 import subprocess
 from tkinter import messagebox
 from plyer import notification
+import threading
 
 # Function to show system notification for posture reminder (cross-platform)
 def show_posture_reminder():
@@ -31,16 +32,24 @@ def get_avg_head_height(faces):
     return None
 
 def start_posture_reminder_gui():
-    global use_button  # Declare use_button as a global variable
+    global use_button, progress_bar  # Declare use_button and progress_bar as global variables
     use_button.configure(text="Loading...", state="disabled")
-    root.update()
+    progress_bar.pack(pady=10)  # Show the progress bar when 'Use' button is pressed
+    progress_bar.set(0)  # Reset progress bar
+    threading.Thread(target=initialize_camera).start()  # Use a separate thread to avoid freezing the GUI
 
+def initialize_camera():
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     cap = cv2.VideoCapture(0)
-    time.sleep(2)
+    
+    for i in range(10):
+        time.sleep(0.2)  # Simulate loading time
+        progress_bar.set((i + 1) / 10)  # Update progress bar
+        root.update_idletasks()
 
     if not cap.isOpened():
         use_button.configure(text="Use", state="normal")
+        progress_bar.pack_forget()  # Hide the progress bar if there is an error
         messagebox.showerror("Error", "Cannot access webcam. Make sure it is not in use by another application and has permission.")
         return
 
@@ -48,6 +57,7 @@ def start_posture_reminder_gui():
     start_posture_reminder(cap, face_cascade)
     root.deiconify()
     use_button.configure(text="Use", state="normal")
+    progress_bar.pack_forget()  # Hide the progress bar after initialization
 
 def start_posture_reminder(cap, face_cascade):
     baseline_head_height = None
@@ -189,7 +199,6 @@ def show_about_project():
     "Ultimately, this posture reminder tool is not just for individuals concerned about their posture—it’s for anyone who spends time working or studying on their computer and wants a simple, effective solution to protect their long-term health. I hope this tool helps users not only improve their posture but also enjoy a healthier, more comfortable life."
 )
 
-
     about_text.configure(state="disabled")  # Make the text read-only
 
     # Add a button to return to the main menu
@@ -206,9 +215,12 @@ def load_main_menu():
     title_label.pack(pady=10)
 
     # Add buttons back to the frame
-    global use_button
+    global use_button, progress_bar
     use_button = ctk.CTkButton(frame, text="Use", command=start_posture_reminder_gui, height=40, width=200)
     use_button.pack(pady=10)
+
+    progress_bar = ctk.CTkProgressBar(frame, width=400)
+    progress_bar.set(0)
 
     how_to_use_button = ctk.CTkButton(frame, text="How to Use", command=show_how_to_use, height=40, width=200)
     how_to_use_button.pack(pady=10)
