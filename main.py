@@ -8,18 +8,18 @@ from tkinter import messagebox
 from plyer import notification
 import threading
 
-# Function to show system notification for posture reminder (cross-platform)
+# Function to show system notification for SitRight (cross-platform)
 def show_posture_reminder():
     system = platform.system()
     
     if system == "Darwin":  # macOS
         message = "Please adjust your posture!"
-        title = "Posture Reminder"
+        title = "SitRight"
         script = f'display notification "{message}" with title "{title}"'
         subprocess.run(["osascript", "-e", script])
     elif system == "Windows":  # Windows
         notification.notify(
-            title="Posture Reminder",
+            title="SitRight",
             message="Please adjust your posture!",
             timeout=2.5
         )
@@ -96,7 +96,7 @@ def start_posture_reminder(cap, face_cascade):
         cv2.putText(frame, 'Press "Q" to quit', (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
         cv2.putText(frame, 'Press "b" to set baseline posture', (10, frame.shape[0] - 40), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
 
-        cv2.imshow('Posture Reminder', frame)
+        cv2.imshow('SitRight', frame)
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):
@@ -178,7 +178,7 @@ def show_about_project():
     "In today’s digital age, maintaining good posture has become increasingly difficult. With most people spending countless hours in front of computers, poor posture has become a widespread issue, leading to back pain, discomfort, and long-term health problems. \n\n"
     
     "### Personal Motivation\n\n"
-    "I faced this challenge personally, often struggling to keep my posture in check during long work or study sessions. After searching for a free, simple solution and finding none that met my needs, I decided to create my own. This posture reminder tool was born out of necessity.\n\n"
+    "I faced this challenge personally, often struggling to keep my posture in check during long work or study sessions. After searching for a free, simple solution and finding none that met my needs, I decided to create my own. This SitRight tool was born out of necessity.\n\n"
     
     "### How the Tool Works\n\n"
     "Built using advanced technologies like OpenCV, customtkinter, and plyer for cross-platform notifications, the application uses a webcam to monitor head position in real-time. It gently reminds users when their posture needs correction, helping them maintain healthier habits while using their computers.\n\n"
@@ -196,7 +196,7 @@ def show_about_project():
     "This project reflects my passion for solving real-world problems through innovative and accessible technology. It showcases my dedication to developing practical applications that can improve everyday life, making it easier for people to maintain healthy habits in a digital world.\n\n"
     
     "### A Tool for Everyone\n\n"
-    "Ultimately, this posture reminder tool is not just for individuals concerned about their posture—it’s for anyone who spends time working or studying on their computer and wants a simple, effective solution to protect their long-term health. I hope this tool helps users not only improve their posture but also enjoy a healthier, more comfortable life."
+    "Ultimately, this SitRight tool is not just for individuals concerned about their posture—it’s for anyone who spends time working or studying on their computer and wants a simple, effective solution to protect their long-term health. I hope this tool helps users not only improve their posture but also enjoy a healthier, more comfortable life."
 )
 
     about_text.configure(state="disabled")  # Make the text read-only
@@ -211,7 +211,7 @@ def load_main_menu():
     frame.pack_propagate(True)  # Allow frame to resize automatically
     clear_frame()
 
-    title_label = ctk.CTkLabel(frame, text="Posture Reminder", font=("Arial", 20))
+    title_label = ctk.CTkLabel(frame, text="SitRight", font=("Arial", 20))
     title_label.pack(pady=10)
 
     # Add buttons back to the frame
@@ -236,7 +236,7 @@ def exit_program():
 
 # Create the main application window using customtkinter
 root = ctk.CTk()
-root.title("Posture Reminder Application")
+root.title("SitRight Application")
 root.geometry("600x400")  # Initial window size
 
 # Add a frame to organize buttons
