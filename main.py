@@ -7,6 +7,9 @@ import subprocess
 from tkinter import messagebox
 from plyer import notification
 import threading
+from PIL import Image, ImageTk  # To handle GIF images
+import tkinter as tk
+import sys
 
 # Function to show system notification for SitRight (cross-platform)
 def show_posture_reminder():
@@ -32,8 +35,11 @@ def get_avg_head_height(faces):
     return None
 
 def start_posture_reminder_gui():
-    global use_button, progress_bar  # Declare use_button and progress_bar as global variables
+    global use_button, progress_bar, how_to_use_button, about_button, exit_button  # Declare buttons as global variables
     use_button.configure(text="Loading...", state="disabled")
+    how_to_use_button.configure(state="disabled")
+    about_button.configure(state="disabled")
+    exit_button.configure(state="disabled")  # Disable other buttons
     progress_bar.pack(pady=10)  # Show the progress bar when 'Use' button is pressed
     progress_bar.set(0)  # Reset progress bar
     threading.Thread(target=initialize_camera).start()  # Use a separate thread to avoid freezing the GUI
@@ -49,6 +55,9 @@ def initialize_camera():
 
     if not cap.isOpened():
         use_button.configure(text="Use", state="normal")
+        how_to_use_button.configure(state="normal")
+        about_button.configure(state="normal")
+        exit_button.configure(state="normal")  # Re-enable buttons if an error occurs
         progress_bar.pack_forget()  # Hide the progress bar if there is an error
         messagebox.showerror("Error", "Cannot access webcam. Make sure it is not in use by another application and has permission.")
         return
@@ -57,6 +66,9 @@ def initialize_camera():
     start_posture_reminder(cap, face_cascade)
     root.deiconify()
     use_button.configure(text="Use", state="normal")
+    how_to_use_button.configure(state="normal")
+    about_button.configure(state="normal")
+    exit_button.configure(state="normal")  # Re-enable buttons after camera initialization
     progress_bar.pack_forget()  # Hide the progress bar after initialization
 
 def start_posture_reminder(cap, face_cascade):
@@ -215,7 +227,7 @@ def load_main_menu():
     title_label.pack(pady=10)
 
     # Add buttons back to the frame
-    global use_button, progress_bar
+    global use_button, progress_bar, how_to_use_button, about_button, exit_button
     use_button = ctk.CTkButton(frame, text="Use", font=("Helvetica", 16, "bold"), command=start_posture_reminder_gui, height=40, width=200)
     use_button.pack(pady=10)
 
@@ -234,16 +246,91 @@ def load_main_menu():
 def exit_program():
     root.quit()
 
-# Create the main application window using customtkinter
-root = ctk.CTk()
-root.title("SitRight Application")
-root.geometry("600x400")  # Initial window size
+# Splash Screen Function
+def show_splash_screen(root):
+    splash_root = tk.Toplevel(root)
+    splash_root.overrideredirect(True)  # Remove window decorations (title bar, etc.)
 
-# Add a frame to organize buttons
-frame = ctk.CTkFrame(master=root)
-frame.pack(pady=20, padx=20, fill="both", expand=True)
+    # Get the screen width and height
+    screen_width = splash_root.winfo_screenwidth()
+    screen_height = splash_root.winfo_screenheight()
 
-# Load the main menu when the app starts
-load_main_menu()
+    # Set the splash screen size
+    splash_width = 600
+    splash_height = 400
 
-root.mainloop()
+    # Calculate position to center the window
+    x_pos = (screen_width - splash_width) // 2
+    y_pos = (screen_height - splash_height) // 2
+
+    # Set the geometry with the new position
+    splash_root.geometry(f"{splash_width}x{splash_height}+{x_pos}+{y_pos}")
+
+    # Set the background color to black
+    splash_root.configure(bg="black")
+
+    # Create a "SitRight" label at the top, with white text
+    title_label = tk.Label(splash_root, text="S i t R i g h t", font=("Helvetica", 30), bg="black", fg="white")
+    title_label.place(relx=0.5, rely=0.2, anchor='center')
+
+    # Load the GIF and store all frames, resizing to fit as a splash screen
+    gif_image = Image.open("splashscreen.gif")  # Replace with the path to your GIF
+    gif_frames = []
+    try:
+        while True:
+            # Resize each frame to a smaller size for the splash screen
+            frame = gif_image.copy().resize((200, 175), Image.LANCZOS)  # Resizing to 175x175
+            gif_frames.append(ImageTk.PhotoImage(frame))
+            gif_image.seek(len(gif_frames))  # Move to the next frame
+    except EOFError:
+        pass  # End of frames
+
+    # Display the GIF in the center of the window
+    gif_label = tk.Label(splash_root, bg="black")
+    gif_label.place(relx=0.5, rely=0.5, anchor='center')
+
+    # Animate the GIF
+    animate_gif(gif_label, gif_frames, 0)
+
+    # Add a static "Loading..." label just below the GIF
+    loading_label = tk.Label(splash_root, text="Loading...", font=("Helvetica", 20), bg="black", fg="white")
+    loading_label.place(relx=0.5, rely=0.8, anchor='center')
+
+    # Close splash screen after 3 seconds and show the main window
+    splash_root.after(4000, lambda: [splash_root.destroy(), root.quit()])
+
+    # Start the event loop to show the splash screen
+    root.mainloop()
+
+def animate_gif(label, gif_frames, frame_index):
+    global after_id
+    # Function to loop through GIF frames
+    frame = gif_frames[frame_index]
+    label.config(image=frame)
+    frame_index += 1
+    if frame_index == len(gif_frames):
+        frame_index = 0  # Loop the GIF back to the first frame
+    after_id = label.after(700, animate_gif, label, gif_frames, frame_index)  # Change frame every 500 ms
+
+# Main entry point
+if __name__ == "__main__":
+    # Create the hidden root window for the splash screen
+    splash_root = tk.Tk()
+    splash_root.withdraw()  # Hide it, since we only need the splash screen
+    
+    # Show the splash screen
+    show_splash_screen(splash_root)
+    
+    # Once the splash screen is done, show the main window
+    root = ctk.CTk()
+    root.title("SitRight Application")
+    root.geometry("600x400")  # Initial window size
+
+    # Add a frame to organize buttons
+    frame = ctk.CTkFrame(master=root)
+    frame.pack(pady=20, padx=20, fill="both", expand=True)
+
+    # Load the main menu when the app starts
+    load_main_menu()
+
+    root.mainloop()
