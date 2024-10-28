@@ -6,15 +6,13 @@ import platform
 import subprocess
 from tkinter import messagebox
 from plyer import notification
-import threading
 from PIL import Image, ImageTk  # To handle GIF images
 import tkinter as tk
-import sys
 
 # Function to show system notification for SitRight (cross-platform)
 def show_posture_reminder():
     system = platform.system()
-    
+
     if system == "Darwin":  # macOS
         message = "Please adjust your posture!"
         title = "SitRight"
@@ -29,36 +27,22 @@ def show_posture_reminder():
 
 def get_avg_head_height(faces):
     """ Returns the average head height from the detected faces. """
-    head_heights = [h for (x, y, w, h) in faces if h > 50]  # Filter out small noise
+    head_heights = [h for (x, y, w, h) in faces if h > 50]
     if len(head_heights) > 0:
         return int(np.mean(head_heights))
     return None
 
 def start_posture_reminder_gui():
-    global use_button, progress_bar, how_to_use_button, about_button, exit_button  # Declare buttons as global variables
+    global use_button
     use_button.configure(text="Loading...", state="disabled")
-    how_to_use_button.configure(state="disabled")
-    about_button.configure(state="disabled")
-    exit_button.configure(state="disabled")  # Disable other buttons
-    progress_bar.pack(pady=10)  # Show the progress bar when 'Use' button is pressed
-    progress_bar.set(0)  # Reset progress bar
-    threading.Thread(target=initialize_camera).start()  # Use a separate thread to avoid freezing the GUI
+    root.update()
 
-def initialize_camera():
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     cap = cv2.VideoCapture(0)
-    
-    for i in range(10):
-        time.sleep(0.2)  # Simulate loading time
-        progress_bar.set((i + 1) / 10)  # Update progress bar
-        root.update_idletasks()
+    time.sleep(2)
 
     if not cap.isOpened():
         use_button.configure(text="Use", state="normal")
-        how_to_use_button.configure(state="normal")
-        about_button.configure(state="normal")
-        exit_button.configure(state="normal")  # Re-enable buttons if an error occurs
-        progress_bar.pack_forget()  # Hide the progress bar if there is an error
         messagebox.showerror("Error", "Cannot access webcam. Make sure it is not in use by another application and has permission.")
         return
 
@@ -66,14 +50,9 @@ def initialize_camera():
     start_posture_reminder(cap, face_cascade)
     root.deiconify()
     use_button.configure(text="Use", state="normal")
-    how_to_use_button.configure(state="normal")
-    about_button.configure(state="normal")
-    exit_button.configure(state="normal")  # Re-enable buttons after camera initialization
-    progress_bar.pack_forget()  # Hide the progress bar after initialization
 
 def start_posture_reminder(cap, face_cascade):
-    baseline_head_height = None
-    baseline_head_position = None
+    baseline_head_height, baseline_head_position = None, None
     last_reminder_time = 0
     cooldown_period = 10
 
@@ -81,23 +60,23 @@ def start_posture_reminder(cap, face_cascade):
         ret, frame = cap.read()
         if not ret:
             break
+
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
 
         # Always display the baseline message
         cv2.putText(frame, 'Set baseline at ideal posture', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
-        
+
         if len(faces) > 0:
             avg_head_height = get_avg_head_height(faces)
-            
+
             for (x, y, w, h) in faces:
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
                 current_head_position = y
 
             if baseline_head_height is not None and baseline_head_position is not None:
                 current_time = time.time()
-                if (avg_head_height is not None and 
-                    avg_head_height < baseline_head_height - 30 or 
+                if (avg_head_height is not None and avg_head_height < baseline_head_height - 30 or 
                     current_head_position > baseline_head_position + 30) and \
                     (current_time - last_reminder_time > cooldown_period):
                     print("Warning: Please adjust your posture!")
@@ -128,63 +107,48 @@ def clear_frame():
         widget.destroy()
 
 def show_how_to_use():
-    """Display detailed 'How to Use' information and resize window."""
-    root.geometry("800x600")  # Resize window to fit the content
-    frame.pack_propagate(False)  # Prevent frame from resizing based on content
+    root.geometry("800x600")
+    frame.pack_propagate(False)
     clear_frame()
 
-    how_to_use_title = ctk.CTkLabel(frame, text="How to Use", font=("Helvetica", 30, "bold"))
+    how_to_use_title = ctk.CTkLabel(frame, text="How to Use", font=("Arial", 20))
     how_to_use_title.pack(pady=10)
 
-    # Add a large text box with detailed usage instructions
     how_to_use_text = ctk.CTkTextbox(frame, width=600, height=300)
-    how_to_use_text.pack(pady=10, expand=True, fill="both")  # Allow text box to expand with the window
-    
-    # Add detailed instructions to the textbox
+    how_to_use_text.pack(pady=10, expand=True, fill="both")
+
     how_to_use_text.insert("1.0", 
     "Step 1: Start the Program\n"
-    "- Press the 'Use' button to begin.\n"
-    "- The camera will turn on.\n\n"
-    
+    "- Press the 'Use' button to begin.\n\n"
     "Step 2: Set Your Baseline Posture\n"
     "- Sit in a comfortable, upright position.\n"
     "- Press the 'b' key to save this posture as your baseline.\n\n"
-
     "Step 3: Let the Program Monitor Your Posture\n"
     "- After setting your baseline, the program will start monitoring your posture.\n"
     "- You can continue working, and the program will alert you if you move out of your baseline posture.\n\n"
-
     "Step 4: End the Session\n"
     "- To stop the session, press the 'q' key in the camera window.\n\n"
-
     "Uses:\n"
-    "This tool can be used for any task that involves sitting and using your computer.\n" 
-    "It can run in the background and will notify you when your posture needs adjustment.\n\n"
+    "This tool can be used for any task that involves sitting and using your computer. It can run in the background and will notify you when your posture needs adjustment.\n"
+    "Note: Make sure your webcam is positioned directly in front of your face for the best posture tracking results."
+    )
 
-    "Note:\n"
-    "Make sure your webcam or camera is positioned directly in front of your face for the best posture tracking results."
-)
+    how_to_use_text.configure(state="disabled")
 
-    how_to_use_text.configure(state="disabled")  # Make the text read-only
-
-    # Add a button to return to the main menu
-    back_button = ctk.CTkButton(frame, text="Back", font=("Helvetica", 16, "bold"), command=load_main_menu)
+    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu)
     back_button.pack(pady=10)
 
 def show_about_project():
-    """Display detailed 'About the Project' information."""
-    root.geometry("800x600")  # Resize window to fit the content
-    frame.pack_propagate(False)  # Prevent frame from resizing based on content
+    root.geometry("800x600")
+    frame.pack_propagate(False)
     clear_frame()
 
-    about_title = ctk.CTkLabel(frame, text="About the Project", font=("Helvetica", 30, "bold"))
+    about_title = ctk.CTkLabel(frame, text="About the Project", font=("Arial", 20))
     about_title.pack(pady=10)
 
-    # Add a large text box with project details
     about_text = ctk.CTkTextbox(frame, width=600, height=300)
-    about_text.pack(pady=10, expand=True, fill="both")  # Allow text box to expand with the window
+    about_text.pack(pady=10, expand=True, fill="both")
 
-    # Add detailed project description to the textbox
     about_text.insert("1.0", 
     "### Addressing a Modern-Day Problem\n\n"
     "In today’s digital age, maintaining good posture has become increasingly difficult. With most people spending countless hours in front of computers, poor posture has become a widespread issue, leading to back pain, discomfort, and long-term health problems. \n\n"
@@ -199,138 +163,76 @@ def show_about_project():
     "What sets this tool apart is its simplicity and accessibility. Many posture tools on the market come with complex features or expensive subscriptions. I wanted to create something that is not only effective but also free and accessible to everyone. The goal was to create an intuitive, lightweight, and non-intrusive solution that could easily fit into anyone’s daily routine.\n\n"
     
     "### Designed to Make an Impact\n\n"
-    "With over 80% of people experiencing back pain due to poor posture, this tool is designed to make a significant impact. It provides consistent reminders to help users develop better posture habits over time, preventing the long-term effects of poor posture.\n\n"
-    
-    "### Technical Highlights\n\n"
-    "This project demonstrates my ability to identify a common problem, design a user-friendly solution, and implement it using cutting-edge technologies. The tool is cross-platform and lightweight, ensuring it runs seamlessly in the background, allowing users to continue working or studying without interruption.\n\n"
-    
-    "### My Passion for Problem-Solving\n\n"
-    "This project reflects my passion for solving real-world problems through innovative and accessible technology. It showcases my dedication to developing practical applications that can improve everyday life, making it easier for people to maintain healthy habits in a digital world.\n\n"
-    
-    "### A Tool for Everyone\n\n"
-    "Ultimately, this SitRight tool is not just for individuals concerned about their posture—it’s for anyone who spends time working or studying on their computer and wants a simple, effective solution to protect their long-term health. I hope this tool helps users not only improve their posture but also enjoy a healthier, more comfortable life."
-)
+    "With over 80% of people experiencing back pain due to poor posture, this tool is designed to make a significant impact. It provides consistent reminders to help users develop better posture habits over time, preventing the long-term effects of poor posture."
+    )
 
-    about_text.configure(state="disabled")  # Make the text read-only
+    about_text.configure(state="disabled")
 
-    # Add a button to return to the main menu
-    back_button = ctk.CTkButton(frame, text="Back", font=("Helvetica", 16, "bold"), command=load_main_menu)
+    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu)
     back_button.pack(pady=10)
 
 def load_main_menu():
-    """Load the main menu with buttons and restore window size."""
-    root.geometry("600x400")  # Restore original window size
-    frame.pack_propagate(True)  # Allow frame to resize automatically
+    root.geometry("600x400")
+    frame.pack_propagate(True)
     clear_frame()
 
-    title_label = ctk.CTkLabel(frame, text="SitRight", font=("Helvetica", 30, "bold"))
+    title_label = ctk.CTkLabel(frame, text="SitRight", font=("Arial", 20))
     title_label.pack(pady=10)
 
-    # Add buttons back to the frame
-    global use_button, progress_bar, how_to_use_button, about_button, exit_button
-    use_button = ctk.CTkButton(frame, text="Use", font=("Helvetica", 16, "bold"), command=start_posture_reminder_gui, height=40, width=200)
+    global use_button
+    use_button = ctk.CTkButton(frame, text="Use", command=start_posture_reminder_gui, height=40, width=200)
     use_button.pack(pady=10)
 
-    progress_bar = ctk.CTkProgressBar(frame, width=400)
-    progress_bar.set(0)
-
-    how_to_use_button = ctk.CTkButton(frame, text="How to Use", font=("Helvetica", 16, "bold"), command=show_how_to_use, height=40, width=200)
+    how_to_use_button = ctk.CTkButton(frame, text="How to Use", command=show_how_to_use, height=40, width=200)
     how_to_use_button.pack(pady=10)
 
-    about_button = ctk.CTkButton(frame, text="About Project", font=("Helvetica", 16, "bold"), command=show_about_project, height=40, width=200)
+    about_button = ctk.CTkButton(frame, text="About Project", command=show_about_project, height=40, width=200)
     about_button.pack(pady=10)
 
-    exit_button = ctk.CTkButton(frame, text="Exit", font=("Helvetica", 16, "bold"), command=exit_program, height=40, width=200)
+    exit_button = ctk.CTkButton(frame, text="Exit", command=exit_program, height=40, width=200)
     exit_button.pack(pady=10)
 
 def exit_program():
     root.quit()
 
 # Splash Screen Function
-def show_splash_screen(root):
+def show_splash_screen():
     splash_root = tk.Toplevel(root)
-    splash_root.overrideredirect(True)  # Remove window decorations (title bar, etc.)
-
-    # Get the screen width and height
-    screen_width = splash_root.winfo_screenwidth()
-    screen_height = splash_root.winfo_screenheight()
-
-    # Set the splash screen size
-    splash_width = 600
-    splash_height = 400
-
-    # Calculate position to center the window
-    x_pos = (screen_width - splash_width) // 2
-    y_pos = (screen_height - splash_height) // 2
-
-    # Set the geometry with the new position
-    splash_root.geometry(f"{splash_width}x{splash_height}+{x_pos}+{y_pos}")
-
-    # Set the background color to black
+    splash_root.overrideredirect(True)
+    splash_root.geometry(f"600x400+{(splash_root.winfo_screenwidth() - 600) // 2}+{(splash_root.winfo_screenheight() - 400) // 2}")
     splash_root.configure(bg="black")
-
-    # Create a "SitRight" label at the top, with white text
     title_label = tk.Label(splash_root, text="S i t R i g h t", font=("Helvetica", 30), bg="black", fg="white")
     title_label.place(relx=0.5, rely=0.2, anchor='center')
-
-    # Load the GIF and store all frames, resizing to fit as a splash screen
-    gif_image = Image.open("splashscreen.gif")  # Replace with the path to your GIF
+    gif_image = Image.open("splashscreen.gif")
     gif_frames = []
     try:
         while True:
-            # Resize each frame to a smaller size for the splash screen
-            frame = gif_image.copy().resize((200, 175), Image.LANCZOS)  # Resizing to 175x175
-            gif_frames.append(ImageTk.PhotoImage(frame))
-            gif_image.seek(len(gif_frames))  # Move to the next frame
+            gif_frames.append(ImageTk.PhotoImage(gif_image.copy().resize((200, 175), Image.LANCZOS)))
+            gif_image.seek(len(gif_frames))
     except EOFError:
-        pass  # End of frames
-
-    # Display the GIF in the center of the window
+        pass
     gif_label = tk.Label(splash_root, bg="black")
     gif_label.place(relx=0.5, rely=0.5, anchor='center')
-
-    # Animate the GIF
     animate_gif(gif_label, gif_frames, 0)
-
-    # Add a static "Loading..." label just below the GIF
     loading_label = tk.Label(splash_root, text="Loading...", font=("Helvetica", 20), bg="black", fg="white")
     loading_label.place(relx=0.5, rely=0.8, anchor='center')
-
-    # Close splash screen after 3 seconds and show the main window
-    splash_root.after(4000, lambda: [splash_root.destroy(), root.quit()])
-
-    # Start the event loop to show the splash screen
-    root.mainloop()
+    splash_root.after(4000, lambda: [splash_root.destroy(), root.deiconify(), load_main_menu()])  # Show main window and load buttons after splash
 
 def animate_gif(label, gif_frames, frame_index):
-    global after_id
-    # Function to loop through GIF frames
-    frame = gif_frames[frame_index]
-    label.config(image=frame)
-    frame_index += 1
-    if frame_index == len(gif_frames):
-        frame_index = 0  # Loop the GIF back to the first frame
-    after_id = label.after(700, animate_gif, label, gif_frames, frame_index)  # Change frame every 500 ms
+    label.config(image=gif_frames[frame_index])
+    label.after(700, animate_gif, label, gif_frames, (frame_index + 1) % len(gif_frames))
 
 # Main entry point
-if __name__ == "__main__":
-    # Create the hidden root window for the splash screen
-    splash_root = tk.Tk()
-    splash_root.withdraw()  # Hide it, since we only need the splash screen
-    
-    # Show the splash screen
-    show_splash_screen(splash_root)
-    
-    # Once the splash screen is done, show the main window
-    root = ctk.CTk()
-    root.title("SitRight Application")
-    root.geometry("600x400")  # Initial window size
+root = ctk.CTk()
+root.withdraw()  # Hide the main window until the splash screen is done
+root.title("SitRight Application")
+root.geometry("600x400")
 
-    # Add a frame to organize buttons
-    frame = ctk.CTkFrame(master=root)
-    frame.pack(pady=20, padx=20, fill="both", expand=True)
+# Add a frame to organize buttons
+frame = ctk.CTkFrame(master=root)
+frame.pack(pady=20, padx=20, fill="both", expand=True)
 
-    # Load the main menu when the app starts
-    load_main_menu()
+# Show splash screen and load main menu
+show_splash_screen()
 
-    root.mainloop()
+root.mainloop()
