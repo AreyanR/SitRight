@@ -121,7 +121,7 @@ def show_how_to_use():
     frame.pack_propagate(False)  # Prevent frame from resizing based on content
     clear_frame()
 
-    how_to_use_title = ctk.CTkLabel(frame, text="How to Use", font=("Arial", 20))
+    how_to_use_title = ctk.CTkLabel(frame, text="How to Use", font=("Helvetica", 30, "bold"))
     how_to_use_title.pack(pady=10)
 
     # Add a large text box with detailed usage instructions
@@ -156,7 +156,7 @@ def show_how_to_use():
     how_to_use_text.configure(state="disabled")  # Make the text read-only
 
     # Add a button to return to the main menu
-    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu)
+    back_button = ctk.CTkButton(frame, text="Back", font=("Helvetica", 16, "bold"), command=load_main_menu)
     back_button.pack(pady=10)
 
 def show_about_project():
@@ -165,7 +165,7 @@ def show_about_project():
     frame.pack_propagate(False)  # Prevent frame from resizing based on content
     clear_frame()
 
-    about_title = ctk.CTkLabel(frame, text="About the Project", font=("Arial", 20))
+    about_title = ctk.CTkLabel(frame, text="About the Project", font=("Helvetica", 30, "bold"))
     about_title.pack(pady=10)
 
     # Add a large text box with project details
@@ -202,7 +202,7 @@ def show_about_project():
     about_text.configure(state="disabled")  # Make the text read-only
 
     # Add a button to return to the main menu
-    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu)
+    back_button = ctk.CTkButton(frame, text="Back", font=("Helvetica", 16, "bold"), command=load_main_menu)
     back_button.pack(pady=10)
 
 def load_main_menu():
@@ -211,24 +211,24 @@ def load_main_menu():
     frame.pack_propagate(True)  # Allow frame to resize automatically
     clear_frame()
 
-    title_label = ctk.CTkLabel(frame, text="SitRight", font=("Arial", 20))
+    title_label = ctk.CTkLabel(frame, text="SitRight", font=("Helvetica", 30, "bold"))
     title_label.pack(pady=10)
 
     # Add buttons back to the frame
     global use_button, progress_bar
-    use_button = ctk.CTkButton(frame, text="Use", command=start_posture_reminder_gui, height=40, width=200)
+    use_button = ctk.CTkButton(frame, text="Use", font=("Helvetica", 16, "bold"), command=start_posture_reminder_gui, height=40, width=200)
     use_button.pack(pady=10)
 
     progress_bar = ctk.CTkProgressBar(frame, width=400)
     progress_bar.set(0)
 
-    how_to_use_button = ctk.CTkButton(frame, text="How to Use", command=show_how_to_use, height=40, width=200)
+    how_to_use_button = ctk.CTkButton(frame, text="How to Use", font=("Helvetica", 16, "bold"), command=show_how_to_use, height=40, width=200)
     how_to_use_button.pack(pady=10)
 
-    about_button = ctk.CTkButton(frame, text="About Project", command=show_about_project, height=40, width=200)
+    about_button = ctk.CTkButton(frame, text="About Project", font=("Helvetica", 16, "bold"), command=show_about_project, height=40, width=200)
     about_button.pack(pady=10)
 
-    exit_button = ctk.CTkButton(frame, text="Exit", command=exit_program, height=40, width=200)
+    exit_button = ctk.CTkButton(frame, text="Exit", font=("Helvetica", 16, "bold"), command=exit_program, height=40, width=200)
     exit_button.pack(pady=10)
 
 def exit_program():
