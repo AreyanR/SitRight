@@ -176,7 +176,7 @@ def load_main_menu():
     frame.pack_propagate(True)
     clear_frame()
 
-    title_label = ctk.CTkLabel(frame, text="SitRight", font=("Arial", 20))
+    title_label = ctk.CTkLabel(frame, text="SitRight", font=("Helvetica", 30, "bold"))
     title_label.pack(pady=10)
 
     global use_button
@@ -201,7 +201,7 @@ def show_splash_screen():
     splash_root.overrideredirect(True)
     splash_root.geometry(f"600x400+{(splash_root.winfo_screenwidth() - 600) // 2}+{(splash_root.winfo_screenheight() - 400) // 2}")
     splash_root.configure(bg="black")
-    title_label = tk.Label(splash_root, text="S i t R i g h t", font=("Helvetica", 30), bg="black", fg="white")
+    title_label = tk.Label(splash_root, text="SitRight", font=("Helvetica", 30), bg="black", fg="white")
     title_label.place(relx=0.5, rely=0.2, anchor='center')
     gif_image = Image.open("splashscreen.gif")
     gif_frames = []
