@@ -107,11 +107,11 @@ def clear_frame():
         widget.destroy()
 
 def show_how_to_use():
-    root.geometry("800x600")
+    root.geometry("600x500")
     frame.pack_propagate(False)
     clear_frame()
 
-    how_to_use_title = ctk.CTkLabel(frame, text="How to Use", font=("Arial", 20))
+    how_to_use_title = ctk.CTkLabel(frame, text="How to Use", font=("Helvetica", 30, "bold"))
     how_to_use_title.pack(pady=10)
 
     how_to_use_text = ctk.CTkTextbox(frame, width=600, height=300)
@@ -123,15 +123,15 @@ def show_how_to_use():
 
     how_to_use_text.configure(state="disabled")
 
-    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#FF8C00", hover_color="#CC7000")
+    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#FF8C00", hover_color="#CC7000", font=bold_font)
     back_button.pack(pady=10)
 
 def show_about_project():
-    root.geometry("800x600")
+    root.geometry("600x500")
     frame.pack_propagate(False)
     clear_frame()
 
-    about_title = ctk.CTkLabel(frame, text="About the Project", font=("Arial", 20))
+    about_title = ctk.CTkLabel(frame, text="About the Project", font=("Helvetica", 30, "bold"))
     about_title.pack(pady=10)
 
     about_text = ctk.CTkTextbox(frame, width=600, height=300)
@@ -143,7 +143,7 @@ def show_about_project():
 
     about_text.configure(state="disabled")
 
-    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#FF8C00", hover_color="#CC7000")
+    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#FF8C00", hover_color="#CC7000", font=bold_font)
     back_button.pack(pady=10)
 
 def load_main_menu():
@@ -165,22 +165,21 @@ def load_main_menu():
     frame.pack_propagate(True)
     clear_frame()
 
-    title_label = ctk.CTkLabel(frame, text="SitRight", font=("Helvetica", 30, "bold"))
+    title_label = ctk.CTkLabel(frame, text="SitRight ", font=("Helvetica", 36, "bold" , "italic"))
     title_label.pack(pady=10)
 
     global use_button
-    use_button = ctk.CTkButton(frame, text="Use", command=start_posture_reminder_gui, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000")
+    use_button = ctk.CTkButton(frame, text="Use", command=start_posture_reminder_gui, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000", font=bold_font)
     use_button.pack(pady=10)
 
-    how_to_use_button = ctk.CTkButton(frame, text="How to Use", command=show_how_to_use, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000")
+    how_to_use_button = ctk.CTkButton(frame, text="How to Use", command=show_how_to_use, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000", font=bold_font)
     how_to_use_button.pack(pady=10)
 
-    about_button = ctk.CTkButton(frame, text="About Project", command=show_about_project, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000")
+    about_button = ctk.CTkButton(frame, text="About Project", command=show_about_project, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000", font=bold_font)
     about_button.pack(pady=10)
 
-    exit_button = ctk.CTkButton(frame, text="Exit", command=exit_program, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000")
+    exit_button = ctk.CTkButton(frame, text="Exit", command=exit_program, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000", font=bold_font)
     exit_button.pack(pady=10)
-
 
 def exit_program():
     root.quit()
@@ -192,11 +191,6 @@ def show_splash_screen():
     splash_root.geometry(f"600x400+{(splash_root.winfo_screenwidth() - 600) // 2}+{(splash_root.winfo_screenheight() - 400) // 2}")
     splash_root.configure(bg="#2b2b2a")  # Set splash screen background to grey
 
-    # Title label without black border and matching background color
-    #title_label = tk.Label(splash_root, text="SitRight", font=("Helvetica", 30), bg="#2b2b2a", fg="white")
-    #title_label.place(relx=0.5, rely=0.2, anchor='center')
-
-    # GIF label without black border and matching background color
     gif_image = Image.open("splashscreen1.gif")
     gif_frames = []
     try:
@@ -209,11 +203,9 @@ def show_splash_screen():
     gif_label.place(relx=0.5, rely=0.5, anchor='center')
     animate_gif(gif_label, gif_frames, 0)
 
-    # Loading label without black border and matching background color
-    loading_label = tk.Label(splash_root, text="Loading...", font=("Helvetica", 20), bg="#2b2b2a", fg="white")
+    loading_label = tk.Label(splash_root, text="Loading...", font=("Helvetica", 20, "bold"), bg="#2b2b2a", fg="white")
     loading_label.place(relx=0.5, rely=0.8, anchor='center')
 
-    # Wait for 4000 ms, then close splash screen and open main window centered
     splash_root.after(4000, lambda: [splash_root.destroy(), load_main_menu()])
 
 def animate_gif(label, gif_frames, frame_index):
@@ -225,6 +217,9 @@ root = ctk.CTk()
 root.withdraw()  # Hide the main window until the splash screen is done
 root.title("SitRight Application")
 root.geometry("600x400")
+
+# Set bold font for buttons
+bold_font = ("Arial", 15, "bold")
 
 # Add a frame to organize buttons
 frame = ctk.CTkFrame(master=root)
