@@ -119,23 +119,11 @@ def show_how_to_use():
 
     how_to_use_text.insert("1.0", 
     "Step 1: Start the Program\n"
-    "- Press the 'Use' button to begin.\n\n"
-    "Step 2: Set Your Baseline Posture\n"
-    "- Sit in a comfortable, upright position.\n"
-    "- Press the 'b' key to save this posture as your baseline.\n\n"
-    "Step 3: Let the Program Monitor Your Posture\n"
-    "- After setting your baseline, the program will start monitoring your posture.\n"
-    "- You can continue working, and the program will alert you if you move out of your baseline posture.\n\n"
-    "Step 4: End the Session\n"
-    "- To stop the session, press the 'q' key in the camera window.\n\n"
-    "Uses:\n"
-    "This tool can be used for any task that involves sitting and using your computer. It can run in the background and will notify you when your posture needs adjustment.\n"
-    "Note: Make sure your webcam is positioned directly in front of your face for the best posture tracking results."
     )
 
     how_to_use_text.configure(state="disabled")
 
-    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu)
+    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#FF8C00", hover_color="#CC7000")
     back_button.pack(pady=10)
 
 def show_about_project():
@@ -151,28 +139,29 @@ def show_about_project():
 
     about_text.insert("1.0", 
     "### Addressing a Modern-Day Problem\n\n"
-    "In today’s digital age, maintaining good posture has become increasingly difficult. With most people spending countless hours in front of computers, poor posture has become a widespread issue, leading to back pain, discomfort, and long-term health problems. \n\n"
-    
-    "### Personal Motivation\n\n"
-    "I faced this challenge personally, often struggling to keep my posture in check during long work or study sessions. After searching for a free, simple solution and finding none that met my needs, I decided to create my own. This SitRight tool was born out of necessity.\n\n"
-    
-    "### How the Tool Works\n\n"
-    "Built using advanced technologies like OpenCV, customtkinter, and plyer for cross-platform notifications, the application uses a webcam to monitor head position in real-time. It gently reminds users when their posture needs correction, helping them maintain healthier habits while using their computers.\n\n"
-    
-    "### Simple, Accessible, and Free\n\n"
-    "What sets this tool apart is its simplicity and accessibility. Many posture tools on the market come with complex features or expensive subscriptions. I wanted to create something that is not only effective but also free and accessible to everyone. The goal was to create an intuitive, lightweight, and non-intrusive solution that could easily fit into anyone’s daily routine.\n\n"
-    
-    "### Designed to Make an Impact\n\n"
-    "With over 80% of people experiencing back pain due to poor posture, this tool is designed to make a significant impact. It provides consistent reminders to help users develop better posture habits over time, preventing the long-term effects of poor posture."
     )
 
     about_text.configure(state="disabled")
 
-    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu)
+    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#FF8C00", hover_color="#CC7000")
     back_button.pack(pady=10)
 
 def load_main_menu():
-    root.geometry("600x400")
+    # Set window dimensions
+    width, height = 600, 400
+
+    # Calculate x and y coordinates for centering the window
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    x = (screen_width // 2) - (width // 2)
+    y = (screen_height // 2) - (height // 2)
+
+    # Set the geometry while the window is still hidden
+    root.geometry(f"{width}x{height}+{x}+{y}")
+
+    # Show the window in the center without flicker
+    root.deiconify()
+
     frame.pack_propagate(True)
     clear_frame()
 
@@ -180,17 +169,18 @@ def load_main_menu():
     title_label.pack(pady=10)
 
     global use_button
-    use_button = ctk.CTkButton(frame, text="Use", command=start_posture_reminder_gui, height=40, width=200)
+    use_button = ctk.CTkButton(frame, text="Use", command=start_posture_reminder_gui, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000")
     use_button.pack(pady=10)
 
-    how_to_use_button = ctk.CTkButton(frame, text="How to Use", command=show_how_to_use, height=40, width=200)
+    how_to_use_button = ctk.CTkButton(frame, text="How to Use", command=show_how_to_use, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000")
     how_to_use_button.pack(pady=10)
 
-    about_button = ctk.CTkButton(frame, text="About Project", command=show_about_project, height=40, width=200)
+    about_button = ctk.CTkButton(frame, text="About Project", command=show_about_project, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000")
     about_button.pack(pady=10)
 
-    exit_button = ctk.CTkButton(frame, text="Exit", command=exit_program, height=40, width=200)
+    exit_button = ctk.CTkButton(frame, text="Exit", command=exit_program, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000")
     exit_button.pack(pady=10)
+
 
 def exit_program():
     root.quit()
@@ -200,23 +190,31 @@ def show_splash_screen():
     splash_root = tk.Toplevel(root)
     splash_root.overrideredirect(True)
     splash_root.geometry(f"600x400+{(splash_root.winfo_screenwidth() - 600) // 2}+{(splash_root.winfo_screenheight() - 400) // 2}")
-    splash_root.configure(bg="black")
-    title_label = tk.Label(splash_root, text="SitRight", font=("Helvetica", 30), bg="black", fg="white")
+    splash_root.configure(bg="#2b2b2a")  # Set splash screen background to grey
+
+    # Title label without black border and matching background color
+    title_label = tk.Label(splash_root, text="SitRight", font=("Helvetica", 30), bg="#2b2b2a", fg="white")
     title_label.place(relx=0.5, rely=0.2, anchor='center')
-    gif_image = Image.open("splashscreen.gif")
+
+    # GIF label without black border and matching background color
+    gif_image = Image.open("splashscreen1.gif")
     gif_frames = []
     try:
         while True:
-            gif_frames.append(ImageTk.PhotoImage(gif_image.copy().resize((200, 175), Image.LANCZOS)))
+            gif_frames.append(ImageTk.PhotoImage(gif_image.copy().resize((200, 175), Image.Resampling.LANCZOS)))
             gif_image.seek(len(gif_frames))
     except EOFError:
         pass
-    gif_label = tk.Label(splash_root, bg="black")
+    gif_label = tk.Label(splash_root, bg="#2b2b2a")  # Set background to grey
     gif_label.place(relx=0.5, rely=0.5, anchor='center')
     animate_gif(gif_label, gif_frames, 0)
-    loading_label = tk.Label(splash_root, text="Loading...", font=("Helvetica", 20), bg="black", fg="white")
+
+    # Loading label without black border and matching background color
+    loading_label = tk.Label(splash_root, text="Loading...", font=("Helvetica", 20), bg="#2b2b2a", fg="white")
     loading_label.place(relx=0.5, rely=0.8, anchor='center')
-    splash_root.after(4000, lambda: [splash_root.destroy(), root.deiconify(), load_main_menu()])  # Show main window and load buttons after splash
+
+    # Wait for 4000 ms, then close splash screen and open main window centered
+    splash_root.after(4000, lambda: [splash_root.destroy(), load_main_menu()])
 
 def animate_gif(label, gif_frames, frame_index):
     label.config(image=gif_frames[frame_index])
