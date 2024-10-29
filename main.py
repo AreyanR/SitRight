@@ -193,8 +193,8 @@ def show_splash_screen():
     splash_root.configure(bg="#2b2b2a")  # Set splash screen background to grey
 
     # Title label without black border and matching background color
-    title_label = tk.Label(splash_root, text="SitRight", font=("Helvetica", 30), bg="#2b2b2a", fg="white")
-    title_label.place(relx=0.5, rely=0.2, anchor='center')
+    #title_label = tk.Label(splash_root, text="SitRight", font=("Helvetica", 30), bg="#2b2b2a", fg="white")
+    #title_label.place(relx=0.5, rely=0.2, anchor='center')
 
     # GIF label without black border and matching background color
     gif_image = Image.open("splashscreen1.gif")
