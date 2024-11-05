@@ -6,7 +6,7 @@ import platform
 import subprocess
 from tkinter import messagebox
 from plyer import notification
-from PIL import Image, ImageTk  # To handle GIF images
+from PIL import Image, ImageTk
 import tkinter as tk
 
 # Function to show system notification for SitRight (cross-platform)
@@ -32,6 +32,7 @@ def get_avg_head_height(faces):
         return int(np.mean(head_heights))
     return None
 
+# function that starts the main functionalty of the appiciton
 def start_posture_reminder_gui():
     global use_button
     use_button.configure(text="Loading...", state="disabled")
@@ -107,24 +108,50 @@ def clear_frame():
         widget.destroy()
 
 def show_how_to_use():
-    root.geometry("600x500")
+    # Get screen dimensions
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    width, height = 650, 800
+
+    # Calculate x and y for centered positioning and move it up by 100 pixels
+    x = (screen_width // 2) - (width // 2)
+    y = (screen_height // 2) - (height // 2) - 200  # Move up by 100 pixels
+
+    # Set geometry with updated y-coordinate
+    root.geometry(f"{width}x{height}+{x}+{y}")
     frame.pack_propagate(False)
     clear_frame()
 
-    how_to_use_title = ctk.CTkLabel(frame, text="How to Use", font=("Helvetica", 30, "bold"))
-    how_to_use_title.pack(pady=10)
+    # Main title
+    how_to_use_title = ctk.CTkLabel(frame, text="How to Use", font=("Helvetica", 24, "bold"))
+    how_to_use_title.pack(pady=20)
 
-    how_to_use_text = ctk.CTkTextbox(frame, width=600, height=300)
-    how_to_use_text.pack(pady=10, expand=True, fill="both")
+    # Frame for each section
+    instructions = [
+        ("Step 1: Start the Program", "Press the 'Use' button to begin."),
+        ("Step 2: Set Your Baseline Posture", "- Sit in a comfortable, upright position.\n- Press the 'b' key to save this posture as your baseline."),
+        ("Step 3: Let the Program Monitor Your Posture", "- After setting your baseline, the program will start monitoring your posture.\n- You can continue working, and the program will alert you if you move out of your baseline posture."),
+        ("Step 4: End the Session", "To stop the session, press the 'q' key in the camera window."),
+        ("Uses", "This tool can be used for any task that involves sitting and using your computer. It can run in the background and will notify you when your posture needs adjustment."),
+        ("Note", "Make sure your webcam is positioned directly in front of your face for the best posture tracking results.")
+    ]
 
-    how_to_use_text.insert("1.0", 
-    "Step 1: Start the Program\n"
-    )
+    for title, content in instructions:
+        section_frame = ctk.CTkFrame(frame, corner_radius=10)
+        section_frame.pack(pady=10, padx=20, fill="x", expand=False)
 
-    how_to_use_text.configure(state="disabled")
+        # Section title
+        title_label = ctk.CTkLabel(section_frame, text=title, font=("Helvetica", 14, "bold"))
+        title_label.pack(anchor="w", pady=(10, 0), padx=10)
 
-    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#FF8C00", hover_color="#CC7000", font=bold_font)
-    back_button.pack(pady=10)
+        # Section content
+        content_label = ctk.CTkLabel(section_frame, text=content, font=("Helvetica", 12), wraplength=550, justify="left")
+        content_label.pack(anchor="w", pady=(0, 10), padx=10)
+
+    # Back button
+    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#FF8C00", hover_color="#CC7000", font=("Helvetica", 15, "bold"))
+    back_button.pack(pady=20)
+
 
 def show_about_project():
     root.geometry("600x500")
