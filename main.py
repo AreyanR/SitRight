@@ -129,11 +129,11 @@ def show_how_to_use():
     # Frame for each section
     instructions = [
         ("Step 1: Start the Program", "Press the 'Use' button to begin."),
-        ("Step 2: Set Your Baseline Posture", "- Sit in a comfortable, upright position.\n- Press the 'b' key to save this posture as your baseline."),
-        ("Step 3: Let the Program Monitor Your Posture", "- After setting your baseline, the program will start monitoring your posture.\n- You can continue working, and the program will alert you if you move out of your baseline posture."),
+        ("Step 2: Set Your Posture", "- Sit in a comfortable, upright position.\n- Press the 'b' key to save this as your desired posture."),
+        ("Step 3: Let the Program Monitor Your Posture", "You can continue working, and the program will alert you if you move out of your set posture."),
         ("Step 4: End the Session", "To stop the session, press the 'q' key in the camera window."),
         ("Uses", "This tool can be used for any task that involves sitting and using your computer. It can run in the background and will notify you when your posture needs adjustment."),
-        ("Note", "Make sure your webcam is positioned directly in front of your face for the best posture tracking results.")
+        ("Note", "- Both external and built-in laptop cameras are supported and work effectively.\n- Make sure your webcam is positioned directly in front of your face for the best posture tracking results.")
     ]
 
     for title, content in instructions:
@@ -141,11 +141,11 @@ def show_how_to_use():
         section_frame.pack(pady=10, padx=20, fill="x", expand=False)
 
         # Section title
-        title_label = ctk.CTkLabel(section_frame, text=title, font=("Helvetica", 14, "bold"))
+        title_label = ctk.CTkLabel(section_frame, text=title, font=("Helvetica", 16, "bold"))
         title_label.pack(anchor="w", pady=(10, 0), padx=10)
 
         # Section content
-        content_label = ctk.CTkLabel(section_frame, text=content, font=("Helvetica", 12), wraplength=550, justify="left")
+        content_label = ctk.CTkLabel(section_frame, text=content, font=("Helvetica", 14), wraplength=550, justify="left")
         content_label.pack(anchor="w", pady=(0, 10), padx=10)
 
     # Back button
@@ -154,24 +154,62 @@ def show_how_to_use():
 
 
 def show_about_project():
-    root.geometry("600x500")
+    # Get screen dimensions
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    width, height = 650, 650
+
+    # Calculate x and y for centered positioning and move it up by 200 pixels
+    x = (screen_width // 2) - (width // 2)
+    y = (screen_height // 2) - (height // 2) - 200
+
+    # Set geometry with updated y-coordinate
+    root.geometry(f"{width}x{height}+{x}+{y}")
     frame.pack_propagate(False)
     clear_frame()
 
-    about_title = ctk.CTkLabel(frame, text="About the Project", font=("Helvetica", 30, "bold"))
-    about_title.pack(pady=10)
+    # Main title
+    about_title = ctk.CTkLabel(frame, text="About the Project", font=("Helvetica", 24, "bold"))
+    about_title.pack(pady=20)
 
-    about_text = ctk.CTkTextbox(frame, width=600, height=300)
-    about_text.pack(pady=10, expand=True, fill="both")
+    # Sections within the "About Project" screen
+    sections = [
+        ("Application Purpose", 
+        "SitRight aims to encourage healthy posture habits in an era when many of us spend long hours at desks. "
+        "It can be challenging to always remember good posture, so why not let the computer do it for you? "
+        "Whether you’re working, gaming, or browsing the web, SitRight is here to prevent poor posture "
+        "by providing gentle reminders to maintain an ideal sitting position."),
 
-    about_text.insert("1.0", 
-    "### Addressing a Modern-Day Problem\n\n"
-    )
+        ("How It Works", 
+        "SitRight uses your webcam to get a frame of when you’re seated in an optimal posture.\n"
+        "During your session, it monitors for deviations from this position and alerts you when adjustments are needed. "
+        ),
 
-    about_text.configure(state="disabled")
+        ("Why I Created SitRight", 
+        "As someone passionate about technology, I spend countless hours at the computer. Maintaining good posture has always been a challenge, "
+        "it’s too easy to get absorbed in work and forget about sitting properly.\n\n"
+        "I created SitRight to tackle this issue, both for myself and for others who spend long hours seated. "
+        "It’s a simple, accessible, and free solution for anyone struggling to maintain good posture.")
 
-    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#FF8C00", hover_color="#CC7000", font=bold_font)
-    back_button.pack(pady=10)
+
+
+    ]
+
+    for title, content in sections:
+        section_frame = ctk.CTkFrame(frame, corner_radius=10)
+        section_frame.pack(pady=10, padx=20, fill="x", expand=False)
+
+        # Section title
+        title_label = ctk.CTkLabel(section_frame, text=title, font=("Helvetica", 16, "bold"))
+        title_label.pack(anchor="w", pady=(10, 0), padx=10)
+
+        # Section content
+        content_label = ctk.CTkLabel(section_frame, text=content, font=("Helvetica", 14), wraplength=550, justify="left")
+        content_label.pack(anchor="w", pady=(0, 10), padx=10)
+
+    # Back button
+    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#FF8C00", hover_color="#CC7000", font=("Helvetica", 15, "bold"))
+    back_button.pack(pady=20)
 
 def load_main_menu():
     # Set window dimensions
