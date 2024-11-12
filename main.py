@@ -8,6 +8,11 @@ from tkinter import messagebox
 from plyer import notification
 from PIL import Image, ImageTk
 import tkinter as tk
+import mediapipe as mp  # Import MediaPipe
+
+# Initialize MediaPipe Face Detection
+mp_face_detection = mp.solutions.face_detection
+mp_drawing = mp.solutions.drawing_utils
 
 # Function to show system notification for SitRight (cross-platform)
 def show_posture_reminder():
@@ -30,10 +35,11 @@ def show_posture_reminder():
 
 def get_avg_head_height(faces):
     """ Returns the average head height from the detected faces. """
-    head_heights = [h for (x, y, w, h) in faces if h > 50]
+    head_heights = [h for (x, y, w, h) in faces if h > 50]  # Extract the height (h) from each face tuple
     if len(head_heights) > 0:
-        return int(np.mean(head_heights))
+        return int(np.mean(head_heights))  # Calculate the average height
     return None
+
 
 # Function that starts the main functionality of the application
 def start_posture_reminder_gui():
@@ -41,7 +47,6 @@ def start_posture_reminder_gui():
     use_button.configure(text="Loading...", state="disabled")
     root.update()
 
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     cap = cv2.VideoCapture(0)
     time.sleep(2)
 
@@ -51,11 +56,11 @@ def start_posture_reminder_gui():
         return
 
     root.withdraw()
-    start_posture_reminder(cap, face_cascade)
+    start_posture_reminder(cap)
     root.deiconify()
     use_button.configure(text="Use", state="normal")
 
-def start_posture_reminder(cap, face_cascade):
+def start_posture_reminder(cap):
     baseline_head_height, baseline_head_position = None, None
     last_reminder_time = 0
     cooldown_period = 5  # seconds
@@ -66,73 +71,81 @@ def start_posture_reminder(cap, face_cascade):
     message_time = time.time()
     message_display_duration = 3  # seconds
 
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
+    with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detection:
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
 
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
+            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            results = face_detection.process(rgb_frame)
 
-        current_time = time.time()
+            current_time = time.time()
 
-        # Dynamic Message Display Logic
-        if message and (current_time - message_time) < message_display_duration:
-            display_message = message
-            display_color = (0, 255, 0) if "set" in message.lower() else (0, 0, 255)
-        elif not baseline_set:
-            display_message = "Baseline not set"
-            display_color = (0, 0, 255)  # Red color for warning
-        else:
-            display_message = ""  # No message
-            display_color = (0, 255, 0)  # Optional: Default color
+            # Dynamic Message Display Logic
+            if message and (current_time - message_time) < message_display_duration:
+                display_message = message
+                display_color = (0, 255, 0) if "set" in message.lower() else (0, 0, 255)
+            elif not baseline_set:
+                display_message = "Baseline not set"
+                display_color = (0, 0, 255)  # Red color for warning
+            else:
+                display_message = ""  # No message
+                display_color = (0, 255, 0)  # Optional: Default color
 
-        if display_message:
-            cv2.putText(frame, display_message, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 
-                        0.8, display_color, 2)
+            if display_message:
+                cv2.putText(frame, display_message, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 
+                            0.8, display_color, 2)
 
-        if len(faces) > 0:
+            faces = []
+            if results.detections:
+                for detection in results.detections:
+                    bbox = detection.location_data.relative_bounding_box
+                    x = int(bbox.xmin * frame.shape[1])
+                    y = int(bbox.ymin * frame.shape[0])
+                    w = int(bbox.width * frame.shape[1])
+                    h = int(bbox.height * frame.shape[0])
+                    faces.append((x, y, w, h))
+                    cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+
             avg_head_height = get_avg_head_height(faces)
-
-            for (x, y, w, h) in faces:
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-                current_head_position = y
 
             if baseline_head_height is not None and baseline_head_position is not None:
                 if (avg_head_height is not None and avg_head_height < baseline_head_height - 30) or \
-                   (current_head_position > baseline_head_position + 30):
+                   (faces and faces[0][1] > baseline_head_position + 30):
                     if (current_time - last_reminder_time > cooldown_period):
                         print("Warning: Please adjust your posture!")
                         show_posture_reminder()
                         last_reminder_time = current_time
 
-        # Always show instructions for quitting and setting baseline
-        cv2.putText(frame, 'Press "Q" to quit', (10, frame.shape[0] - 10), 
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
-        cv2.putText(frame, 'Press "B" to set baseline posture', 
-                    (10, frame.shape[0] - 40), cv2.FONT_HERSHEY_SIMPLEX, 
-                    0.8, (0, 255, 0), 2)
+            # Always show instructions for quitting and setting baseline
+            cv2.putText(frame, 'Press "Q" to quit', (10, frame.shape[0] - 10), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+            cv2.putText(frame, 'Press "B" to set baseline posture', 
+                        (10, frame.shape[0] - 40), cv2.FONT_HERSHEY_SIMPLEX, 
+                        0.8, (0, 255, 0), 2)
 
-        cv2.imshow('SitRight', frame)
+            cv2.imshow('SitRight', frame)
 
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord('q') or key == ord('Q'):
-            break
-        elif key == ord('b') or key == ord('B'):
-            if len(faces) > 0:
-                baseline_head_height = avg_head_height
-                baseline_head_position = faces[0][1]
-                baseline_set = True
-                message = "Baseline set"
-                message_time = current_time  # Update message timestamp
-                print(f"Baseline set: Height = {baseline_head_height}, Position = {baseline_head_position}")
-            else:
-                message = "No face detected. Cannot set baseline."
-                message_time = current_time  # Update message timestamp
+            key = cv2.waitKey(1) & 0xFF
+            if key == ord('q') or key == ord('Q'):
+                break
+            elif key == ord('b') or key == ord('B'):
+                if len(faces) > 0:
+                    baseline_head_height = avg_head_height
+                    baseline_head_position = faces[0][1]
+                    baseline_set = True
+                    message = "Baseline set"
+                    message_time = current_time  # Update message timestamp
+                    print(f"Baseline set: Height = {baseline_head_height}, Position = {baseline_head_position}")
+                else:
+                    message = "No face detected. Cannot set baseline."
+                    message_time = current_time  # Update message timestamp
 
     cap.release()
     cv2.destroyAllWindows()
 
+    
 def clear_frame():
     """Clear all widgets from the frame."""
     for widget in frame.winfo_children():
@@ -146,7 +159,7 @@ def show_how_to_use():
 
     # Calculate x and y for centered positioning and move it up by 100 pixels
     x = (screen_width // 2) - (width // 2)
-    y = (screen_height // 2) - (height // 2) - 200  # Move up by 200 pixels
+    y = (screen_height // 2) - (height // 2) - 100  # Move up by 200 pixels
 
     # Set geometry with updated y-coordinate
     root.geometry(f"{width}x{height}+{x}+{y}")
@@ -180,7 +193,7 @@ def show_how_to_use():
         content_label.pack(anchor="w", pady=(0, 10), padx=10)
 
     # Back button
-    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#FF8C00", hover_color="#CC7000", font=("Helvetica", 15, "bold"))
+    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#e08814", hover_color="#CC7000", font=("Helvetica", 15, "bold"))
     back_button.pack(pady=20)
 
 
@@ -188,7 +201,7 @@ def show_about_project():
     # Get screen dimensions
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
-    width, height = 650, 650
+    width, height = 650, 750
 
     # Calculate x and y for centered positioning and move it up by 200 pixels
     x = (screen_width // 2) - (width // 2)
@@ -220,7 +233,10 @@ def show_about_project():
         "As someone passionate about technology, I spend countless hours at the computer. Maintaining good posture has always been a challenge, "
         "it’s too easy to get absorbed in work and forget about sitting properly.\n\n"
         "I created SitRight to tackle this issue, both for myself and for others who spend long hours seated. "
-        "It’s a simple, accessible, and free solution for anyone struggling to maintain good posture.")
+        "It’s a simple, accessible, and free solution for anyone struggling to maintain good posture."),
+
+        ("Why Use SitRight?", 
+        "lol")
     ]
 
     for title, content in sections:
@@ -236,7 +252,7 @@ def show_about_project():
         content_label.pack(anchor="w", pady=(0, 10), padx=10)
 
     # Back button
-    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#FF8C00", hover_color="#CC7000", font=("Helvetica", 15, "bold"))
+    back_button = ctk.CTkButton(frame, text="Back", command=load_main_menu, fg_color="#e08814", hover_color="#CC7000", font=("Helvetica", 15, "bold"))
     back_button.pack(pady=20)
 
 def load_main_menu():
@@ -258,31 +274,31 @@ def load_main_menu():
     frame.pack_propagate(True)
     clear_frame()
 
-    title_label = ctk.CTkLabel(frame, text="SitRight", font=("Helvetica", 36, "bold", "italic"))
+    title_label = ctk.CTkLabel(frame, text="SitRight ", font=("Helvetica", 36, "bold", "italic"))
     title_label.pack(pady=10)
 
     global use_button
     use_button = ctk.CTkButton(
         frame, text="Use", command=start_posture_reminder_gui, height=40, width=200, 
-        fg_color="#FF8C00", hover_color="#CC7000", font=bold_font
+        fg_color="#e08814", hover_color="#CC7000", font=bold_font
     )
     use_button.pack(pady=10)
 
     how_to_use_button = ctk.CTkButton(
         frame, text="How to Use", command=show_how_to_use, height=40, width=200, 
-        fg_color="#FF8C00", hover_color="#CC7000", font=bold_font
+        fg_color="#e08814", hover_color="#CC7000", font=bold_font
     )
     how_to_use_button.pack(pady=10)
 
     about_button = ctk.CTkButton(
         frame, text="About Project", command=show_about_project, height=40, width=200, 
-        fg_color="#FF8C00", hover_color="#CC7000", font=bold_font
+        fg_color="#e08814", hover_color="#CC7000", font=bold_font
     )
     about_button.pack(pady=10)
 
     exit_button = ctk.CTkButton(
         frame, text="Exit", command=exit_program, height=40, width=200, 
-        fg_color="#FF8C00", hover_color="#CC7000", font=bold_font
+        fg_color="#e08814", hover_color="#CC7000", font=bold_font
     )
     exit_button.pack(pady=10)
 
@@ -299,7 +315,7 @@ def show_splash_screen():
 
     # Load and resize the GIF image
     try:
-        gif_image = Image.open("splashscreen1.gif")
+        gif_image = Image.open("resources/splashscreen1.gif")
     except FileNotFoundError:
         messagebox.showerror("Error", "Splash screen GIF not found.")
         root.quit()
@@ -348,6 +364,7 @@ root = ctk.CTk()
 root.withdraw()  # Hide the main window until the splash screen is done
 root.title("SitRight Application")
 root.geometry("600x400")
+root.iconbitmap("resources/icon.ico") 
 
 # Set bold font for buttons
 bold_font = ("Arial", 15, "bold")
@@ -360,3 +377,4 @@ frame.pack(pady=20, padx=20, fill="both", expand=True)
 show_splash_screen()
 
 root.mainloop()
+
