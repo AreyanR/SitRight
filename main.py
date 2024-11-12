@@ -24,6 +24,9 @@ def show_posture_reminder():
             message="Please adjust your posture!",
             timeout=2.5
         )
+    else:  # Linux or other OS
+        # You can add Linux notification code here if needed
+        pass
 
 def get_avg_head_height(faces):
     """ Returns the average head height from the detected faces. """
@@ -32,7 +35,7 @@ def get_avg_head_height(faces):
         return int(np.mean(head_heights))
     return None
 
-# function that starts the main functionalty of the appiciton
+# Function that starts the main functionality of the application
 def start_posture_reminder_gui():
     global use_button
     use_button.configure(text="Loading...", state="disabled")
@@ -55,7 +58,13 @@ def start_posture_reminder_gui():
 def start_posture_reminder(cap, face_cascade):
     baseline_head_height, baseline_head_position = None, None
     last_reminder_time = 0
-    cooldown_period = 10
+    cooldown_period = 5  # seconds
+
+    # State Variables for Message Management
+    baseline_set = False
+    message = "Baseline not set"
+    message_time = time.time()
+    message_display_duration = 3  # seconds
 
     while True:
         ret, frame = cap.read()
@@ -65,8 +74,22 @@ def start_posture_reminder(cap, face_cascade):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
 
-        # Always display the baseline message
-        cv2.putText(frame, 'Set baseline at ideal posture', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+        current_time = time.time()
+
+        # Dynamic Message Display Logic
+        if message and (current_time - message_time) < message_display_duration:
+            display_message = message
+            display_color = (0, 255, 0) if "set" in message.lower() else (0, 0, 255)
+        elif not baseline_set:
+            display_message = "Baseline not set"
+            display_color = (0, 0, 255)  # Red color for warning
+        else:
+            display_message = ""  # No message
+            display_color = (0, 255, 0)  # Optional: Default color
+
+        if display_message:
+            cv2.putText(frame, display_message, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 
+                        0.8, display_color, 2)
 
         if len(faces) > 0:
             avg_head_height = get_avg_head_height(faces)
@@ -76,28 +99,36 @@ def start_posture_reminder(cap, face_cascade):
                 current_head_position = y
 
             if baseline_head_height is not None and baseline_head_position is not None:
-                current_time = time.time()
-                if (avg_head_height is not None and avg_head_height < baseline_head_height - 30 or 
-                    current_head_position > baseline_head_position + 30) and \
-                    (current_time - last_reminder_time > cooldown_period):
-                    print("Warning: Please adjust your posture!")
-                    show_posture_reminder()
-                    last_reminder_time = current_time
+                if (avg_head_height is not None and avg_head_height < baseline_head_height - 30) or \
+                   (current_head_position > baseline_head_position + 30):
+                    if (current_time - last_reminder_time > cooldown_period):
+                        print("Warning: Please adjust your posture!")
+                        show_posture_reminder()
+                        last_reminder_time = current_time
 
         # Always show instructions for quitting and setting baseline
-        cv2.putText(frame, 'Press "Q" to quit', (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
-        cv2.putText(frame, 'Press "b" to set baseline posture', (10, frame.shape[0] - 40), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+        cv2.putText(frame, 'Press "Q" to quit', (10, frame.shape[0] - 10), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+        cv2.putText(frame, 'Press "B" to set baseline posture', 
+                    (10, frame.shape[0] - 40), cv2.FONT_HERSHEY_SIMPLEX, 
+                    0.8, (0, 255, 0), 2)
 
         cv2.imshow('SitRight', frame)
 
         key = cv2.waitKey(1) & 0xFF
-        if key == ord('q'):
+        if key == ord('q') or key == ord('Q'):
             break
-        elif key == ord('b'):
+        elif key == ord('b') or key == ord('B'):
             if len(faces) > 0:
                 baseline_head_height = avg_head_height
                 baseline_head_position = faces[0][1]
+                baseline_set = True
+                message = "Baseline set"
+                message_time = current_time  # Update message timestamp
                 print(f"Baseline set: Height = {baseline_head_height}, Position = {baseline_head_position}")
+            else:
+                message = "No face detected. Cannot set baseline."
+                message_time = current_time  # Update message timestamp
 
     cap.release()
     cv2.destroyAllWindows()
@@ -115,7 +146,7 @@ def show_how_to_use():
 
     # Calculate x and y for centered positioning and move it up by 100 pixels
     x = (screen_width // 2) - (width // 2)
-    y = (screen_height // 2) - (height // 2) - 200  # Move up by 100 pixels
+    y = (screen_height // 2) - (height // 2) - 200  # Move up by 200 pixels
 
     # Set geometry with updated y-coordinate
     root.geometry(f"{width}x{height}+{x}+{y}")
@@ -129,9 +160,9 @@ def show_how_to_use():
     # Frame for each section
     instructions = [
         ("Step 1: Start the Program", "Press the 'Use' button to begin."),
-        ("Step 2: Set Your Posture", "- Sit in a comfortable, upright position.\n- Press the 'b' key to save this as your desired posture."),
+        ("Step 2: Set Your Posture", "- Sit in a comfortable, upright position.\n- Press the 'B' key to save this as your desired posture."),
         ("Step 3: Let the Program Monitor Your Posture", "You can continue working, and the program will alert you if you move out of your set posture."),
-        ("Step 4: End the Session", "To stop the session, press the 'q' key in the camera window."),
+        ("Step 4: End the Session", "To stop the session, press the 'Q' key in the camera window."),
         ("Uses", "This tool can be used for any task that involves sitting and using your computer. It can run in the background and will notify you when your posture needs adjustment."),
         ("Note", "- Both external and built-in laptop cameras are supported and work effectively.\n- Make sure your webcam is positioned directly in front of your face for the best posture tracking results.")
     ]
@@ -161,7 +192,7 @@ def show_about_project():
 
     # Calculate x and y for centered positioning and move it up by 200 pixels
     x = (screen_width // 2) - (width // 2)
-    y = (screen_height // 2) - (height // 2) - 200
+    y = (screen_height // 2) - (height // 2) - 200  # Move up by 200 pixels
 
     # Set geometry with updated y-coordinate
     root.geometry(f"{width}x{height}+{x}+{y}")
@@ -190,9 +221,6 @@ def show_about_project():
         "it’s too easy to get absorbed in work and forget about sitting properly.\n\n"
         "I created SitRight to tackle this issue, both for myself and for others who spend long hours seated. "
         "It’s a simple, accessible, and free solution for anyone struggling to maintain good posture.")
-
-
-
     ]
 
     for title, content in sections:
@@ -230,20 +258,32 @@ def load_main_menu():
     frame.pack_propagate(True)
     clear_frame()
 
-    title_label = ctk.CTkLabel(frame, text="SitRight ", font=("Helvetica", 36, "bold" , "italic"))
+    title_label = ctk.CTkLabel(frame, text="SitRight", font=("Helvetica", 36, "bold", "italic"))
     title_label.pack(pady=10)
 
     global use_button
-    use_button = ctk.CTkButton(frame, text="Use", command=start_posture_reminder_gui, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000", font=bold_font)
+    use_button = ctk.CTkButton(
+        frame, text="Use", command=start_posture_reminder_gui, height=40, width=200, 
+        fg_color="#FF8C00", hover_color="#CC7000", font=bold_font
+    )
     use_button.pack(pady=10)
 
-    how_to_use_button = ctk.CTkButton(frame, text="How to Use", command=show_how_to_use, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000", font=bold_font)
+    how_to_use_button = ctk.CTkButton(
+        frame, text="How to Use", command=show_how_to_use, height=40, width=200, 
+        fg_color="#FF8C00", hover_color="#CC7000", font=bold_font
+    )
     how_to_use_button.pack(pady=10)
 
-    about_button = ctk.CTkButton(frame, text="About Project", command=show_about_project, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000", font=bold_font)
+    about_button = ctk.CTkButton(
+        frame, text="About Project", command=show_about_project, height=40, width=200, 
+        fg_color="#FF8C00", hover_color="#CC7000", font=bold_font
+    )
     about_button.pack(pady=10)
 
-    exit_button = ctk.CTkButton(frame, text="Exit", command=exit_program, height=40, width=200, fg_color="#FF8C00", hover_color="#CC7000", font=bold_font)
+    exit_button = ctk.CTkButton(
+        frame, text="Exit", command=exit_program, height=40, width=200, 
+        fg_color="#FF8C00", hover_color="#CC7000", font=bold_font
+    )
     exit_button.pack(pady=10)
 
 def exit_program():
@@ -253,56 +293,31 @@ def exit_program():
 def show_splash_screen():
     splash_root = tk.Toplevel(root)
     splash_root.overrideredirect(True)
-    splash_root.geometry(f"600x400+{(splash_root.winfo_screenwidth() - 600) // 2}+{(splash_root.winfo_screenheight() - 400) // 2}")
+    splash_width, splash_height = 600, 400
+    splash_root.geometry(f"{splash_width}x{splash_height}+{(splash_root.winfo_screenwidth() - splash_width) // 2}+{(splash_root.winfo_screenheight() - splash_height) // 2}")
     splash_root.configure(bg="#2b2b2a")  # Set splash screen background to grey
 
     # Load and resize the GIF image
-    gif_image = Image.open("splashscreen1.gif")
+    try:
+        gif_image = Image.open("splashscreen1.gif")
+    except FileNotFoundError:
+        messagebox.showerror("Error", "Splash screen GIF not found.")
+        root.quit()
+        return
+
     gif_frames = []
     try:
         while True:
-            gif_frames.append(ImageTk.PhotoImage(gif_image.copy().resize((200, 175), Image.Resampling.LANCZOS)))
-            gif_image.seek(len(gif_frames))
+            frame = gif_image.copy().resize((200, 175), Image.Resampling.LANCZOS)
+            gif_frames.append(ImageTk.PhotoImage(frame))
+            gif_image.seek(len(gif_frames))  # Move to next frame
     except EOFError:
-        pass
+        pass  # End of GIF frames
 
-    # Display GIF animation
-    gif_label = tk.Label(splash_root, bg="#2b2b2a")  # Set background to grey
-    gif_label.place(relx=0.5, rely=0.5, anchor='center')
-    animate_gif(gif_label, gif_frames, 0)
-
-    # Loading label for animated text
-    loading_label = tk.Label(splash_root, text="Loading", font=("Helvetica", 20, "bold"), bg="#2b2b2a", fg="white")
-    loading_label.place(relx=0.5, rely=0.8, anchor='center')
-
-    # Function to animate loading text
-    def animate_loading_text(label, count=0):
-        dots = "." * (count % 4)  # Cycle between no dots, 1 dot, 2 dots, and 3 dots
-        label.config(text=f"Loading{dots}")
-        label.after(500, animate_loading_text, label, count + 1)
-
-    # Start the loading text animation
-    animate_loading_text(loading_label)
-
-    # Destroy splash screen and load main menu after 4 seconds
-    splash_root.after(4000, lambda: [splash_root.destroy(), load_main_menu()])
-
-# Splash Screen Function
-def show_splash_screen():
-    splash_root = tk.Toplevel(root)
-    splash_root.overrideredirect(True)
-    splash_root.geometry(f"600x400+{(splash_root.winfo_screenwidth() - 600) // 2}+{(splash_root.winfo_screenheight() - 400) // 2}")
-    splash_root.configure(bg="#2b2b2a")  # Set splash screen background to grey
-
-    # Load and resize the GIF image
-    gif_image = Image.open("splashscreen1.gif")
-    gif_frames = []
-    try:
-        while True:
-            gif_frames.append(ImageTk.PhotoImage(gif_image.copy().resize((200, 175), Image.Resampling.LANCZOS)))
-            gif_image.seek(len(gif_frames))
-    except EOFError:
-        pass
+    if not gif_frames:
+        messagebox.showerror("Error", "No frames found in splash screen GIF.")
+        root.quit()
+        return
 
     # Display GIF animation
     gif_label = tk.Label(splash_root, bg="#2b2b2a")  # Set background to grey
@@ -327,7 +342,6 @@ def show_splash_screen():
 
     # Destroy splash screen and load main menu after 4 seconds
     splash_root.after(4000, lambda: [splash_root.destroy(), load_main_menu()])
-
 
 # Main entry point
 root = ctk.CTk()
