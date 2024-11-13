@@ -8,14 +8,17 @@ from tkinter import messagebox
 from plyer import notification
 from PIL import Image, ImageTk
 import tkinter as tk
-import mediapipe as mp  # Import MediaPipe
+import mediapipe as mp
 
 # Initialize MediaPipe Face Detection
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 
-# Function to show system notification for SitRight (cross-platform)
+
 def show_posture_reminder():
+    """
+    Displays a posture reminder notification to the user based on their operating system. (MacOS and Windows)
+    """
     system = platform.system()
 
     if system == "Darwin":  # macOS
@@ -29,8 +32,7 @@ def show_posture_reminder():
             message="Please adjust your posture!",
             timeout=2.5
         )
-    else:  # Linux or other OS
-        # You can add Linux notification code here if needed
+    else:  # You can add Linux or other OS here
         pass
 
 def get_avg_head_height(faces):
@@ -43,59 +45,91 @@ def get_avg_head_height(faces):
 
 # Function that starts the main functionality of the application
 def start_posture_reminder_gui():
+    """
+    Manages the GUI workflow to start the posture reminder, accessing the webcam and handling errors.
+    """
     global use_button
+
+    # Disable the "Use" button and update its text to indicate loading
     use_button.configure(text="Loading...", state="disabled")
     root.update()
 
+    # Initialize the webcam
     cap = cv2.VideoCapture(0)
-    time.sleep(2)
+    time.sleep(2)  # Allow time for the webcam to initialize
 
+    # Check if the webcam is accessible
     if not cap.isOpened():
+        # Re-enable the "Use" button and show an error message if the webcam cannot be accessed
         use_button.configure(text="Use", state="normal")
         messagebox.showerror("Error", "Cannot access webcam. Make sure it is not in use by another application and has permission.")
         return
 
+    # Hide the main GUI window while posture monitoring is active
     root.withdraw()
+
+    # Start the posture reminder functionality
     start_posture_reminder(cap)
+
+    # Restore the main GUI window after posture monitoring ends
     root.deiconify()
-    use_button.configure(text="Use", state="normal")
+    use_button.configure(text="Use", state="normal")  # Re-enable the Use button
 
 def start_posture_reminder(cap):
+    """
+    Monitors the user's posture through a webcam feed and provides real-time reminders to maintain proper posture.
+
+    Key Features:
+    - Detects faces and calculates head height and position.
+    - Allows the user to set a baseline reference posture.
+    - Issues reminders when posture deviates significantly from the baseline.
+    - Displays visual feedback in the webcam feed, including instructions and posture status.
+    - Provides options to quit the program or set the reference posture via keyboard input.
+
+    Parameters:
+        cap (cv2.VideoCapture): The webcam feed used for posture detection and monitoring.
+    """
+    # Initialize baseline posture variables and timing for reminders
     baseline_head_height, baseline_head_position = None, None
     last_reminder_time = 0
-    cooldown_period = 5  # seconds
+    cooldown_period = 5  # seconds between reminders
 
-    # State Variables for Message Management
+    # State variables for managing status messages
     baseline_set = False
     message = "Reference posture not set"
     message_time = time.time()
-    message_display_duration = 3  # seconds
+    message_display_duration = 3  # seconds for displaying messages
 
+    # Start face detection using MediaPipe's Face Detection module
     with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detection:
         while True:
+            # Read the current frame from the webcam
             ret, frame = cap.read()
             if not ret:
                 break
 
+            # Convert the frame to RGB for face detection
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             results = face_detection.process(rgb_frame)
 
             current_time = time.time()
 
-            # Dynamic Message Display Logic
+            # Manage the display of dynamic messages
             if not baseline_set:
                 display_message = "Reference posture not set"
-                display_color = (0, 0, 255)  # Red color for warning
+                display_color = (0, 0, 255)  # Red for warning
             elif baseline_set and (current_time - message_time) < message_display_duration:
                 display_message = "Reference posture set"
-                display_color = (0, 255, 0)  # Green color for success
+                display_color = (0, 255, 0)  # Green for success
             else:
                 display_message = ""  # No message
 
+            # Display the message on the video feed
             if display_message:
                 cv2.putText(frame, display_message, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
                             0.8, display_color, 2)
 
+            # Detect faces and extract bounding boxes
             faces = []
             if results.detections:
                 for detection in results.detections:
@@ -106,47 +140,54 @@ def start_posture_reminder(cap):
                     h = int(bbox.height * frame.shape[0])
                     faces.append((x, y, w, h))
 
-            # Keep only the largest face
+            # Keep only the largest detected face
             if faces:
                 faces = [max(faces, key=lambda face: face[2] * face[3])]  # Largest face by area
 
+            # Draw bounding boxes around detected faces
             for x, y, w, h in faces:
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
+            # Calculate the average head height of detected faces
             avg_head_height = get_avg_head_height(faces)
 
+            # Check for posture deviation and trigger reminders
             if baseline_head_height is not None and baseline_head_position is not None:
                 if (avg_head_height is not None and avg_head_height < baseline_head_height - 30) or \
                    (faces and faces[0][1] > baseline_head_position + 30):
                     if (current_time - last_reminder_time > cooldown_period):
-                        print("Warning: Please adjust your posture!")
+                        #print("Warning: Please adjust your posture!")
                         show_posture_reminder()
                         last_reminder_time = current_time
 
-            # Always show instructions for quitting and setting baseline
+            # Display instructions for quitting and setting baseline posture
             cv2.putText(frame, 'Press "Q" to quit', (10, frame.shape[0] - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
             cv2.putText(frame, 'Press "B" to set Reference posture',
                         (10, frame.shape[0] - 40), cv2.FONT_HERSHEY_SIMPLEX,
                         0.8, (0, 255, 0), 2)
 
+            # Show the video feed with annotations
             cv2.imshow('SitRight', frame)
 
+            # Keyboard controls for quitting or setting baseline posture
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q') or key == ord('Q'):
-                break
+                break  # Quit the program
             elif key == ord('b') or key == ord('B'):
+                # Set the baseline posture if a face is detected
                 if len(faces) > 0:
                     baseline_head_height = avg_head_height
                     baseline_head_position = faces[0][1]
                     baseline_set = True
                     message = "Reference posture set"
                     message_time = current_time  # Update message timestamp
-                    print(f"Baseline set: Height = {baseline_head_height}, Position = {baseline_head_position}")
+                    #print(f"Baseline set: Height = {baseline_head_height}, Position = {baseline_head_position}")
                 else:
                     message = "No face detected. Cannot set baseline."
                     message_time = current_time  # Update message timestamp
 
+    # Release the webcam and close the display window
     cap.release()
     cv2.destroyAllWindows()
 
