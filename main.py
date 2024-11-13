@@ -106,7 +106,13 @@ def start_posture_reminder(cap):
                     w = int(bbox.width * frame.shape[1])
                     h = int(bbox.height * frame.shape[0])
                     faces.append((x, y, w, h))
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            
+            # Keep only the largest face
+            if faces:
+                faces = [max(faces, key=lambda face: face[2] * face[3])]  # Largest face by area
+
+            for x, y, w, h in faces:
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
             avg_head_height = get_avg_head_height(faces)
 
@@ -144,6 +150,7 @@ def start_posture_reminder(cap):
 
     cap.release()
     cv2.destroyAllWindows()
+
 
     
 def clear_frame():
