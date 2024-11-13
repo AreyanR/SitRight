@@ -67,7 +67,7 @@ def start_posture_reminder(cap):
 
     # State Variables for Message Management
     baseline_set = False
-    message = "Baseline not set"
+    message = "Reference posture not set"
     message_time = time.time()
     message_display_duration = 3  # seconds
 
@@ -83,18 +83,17 @@ def start_posture_reminder(cap):
             current_time = time.time()
 
             # Dynamic Message Display Logic
-            if message and (current_time - message_time) < message_display_duration:
-                display_message = message
-                display_color = (0, 255, 0) if "set" in message.lower() else (0, 0, 255)
-            elif not baseline_set:
-                display_message = "Baseline not set"
+            if not baseline_set:
+                display_message = "Reference posture not set"
                 display_color = (0, 0, 255)  # Red color for warning
+            elif baseline_set and (current_time - message_time) < message_display_duration:
+                display_message = "Reference posture set"
+                display_color = (0, 255, 0)  # Green color for success
             else:
                 display_message = ""  # No message
-                display_color = (0, 255, 0)  # Optional: Default color
 
             if display_message:
-                cv2.putText(frame, display_message, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 
+                cv2.putText(frame, display_message, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
                             0.8, display_color, 2)
 
             faces = []
@@ -106,7 +105,7 @@ def start_posture_reminder(cap):
                     w = int(bbox.width * frame.shape[1])
                     h = int(bbox.height * frame.shape[0])
                     faces.append((x, y, w, h))
-            
+
             # Keep only the largest face
             if faces:
                 faces = [max(faces, key=lambda face: face[2] * face[3])]  # Largest face by area
@@ -125,10 +124,10 @@ def start_posture_reminder(cap):
                         last_reminder_time = current_time
 
             # Always show instructions for quitting and setting baseline
-            cv2.putText(frame, 'Press "Q" to quit', (10, frame.shape[0] - 10), 
+            cv2.putText(frame, 'Press "Q" to quit', (10, frame.shape[0] - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
-            cv2.putText(frame, 'Press "B" to set baseline posture', 
-                        (10, frame.shape[0] - 40), cv2.FONT_HERSHEY_SIMPLEX, 
+            cv2.putText(frame, 'Press "B" to set Reference posture',
+                        (10, frame.shape[0] - 40), cv2.FONT_HERSHEY_SIMPLEX,
                         0.8, (0, 255, 0), 2)
 
             cv2.imshow('SitRight', frame)
@@ -141,7 +140,7 @@ def start_posture_reminder(cap):
                     baseline_head_height = avg_head_height
                     baseline_head_position = faces[0][1]
                     baseline_set = True
-                    message = "Baseline set"
+                    message = "Reference posture set"
                     message_time = current_time  # Update message timestamp
                     print(f"Baseline set: Height = {baseline_head_height}, Position = {baseline_head_position}")
                 else:
@@ -150,6 +149,7 @@ def start_posture_reminder(cap):
 
     cap.release()
     cv2.destroyAllWindows()
+
 
 
     
@@ -180,11 +180,11 @@ def show_how_to_use():
     # Frame for each section
     instructions = [
         ("Step 1: Start the Program", "Press the 'Use' button to begin."),
-        ("Step 2: Set Your Posture", "- Sit in a comfortable, upright position.\n- Press the 'B' key to save this as your desired posture."),
+        ("Step 2: Set Your Posture", "- Sit in a comfortable, upright position.\n- Press the 'B' key to save this as your refrence posture."),
         ("Step 3: Let the Program Monitor Your Posture", "You can continue working, and the program will alert you if you move out of your set posture."),
         ("Step 4: End the Session", "To stop the session, press the 'Q' key in the camera window."),
-        ("Uses", "This tool can be used for any task that involves sitting and using your computer. It can run in the background and will notify you when your posture needs adjustment."),
-        ("Note", "- Both external and built-in laptop cameras are supported and work effectively.\n- Make sure your webcam is positioned directly in front of your face for the best posture tracking results.")
+        ("Uses", "This tool can be used for any task that involves sitting and using your computer. It can run in the background of any application"),
+        ("Note", "- Both external and built-in laptop cameras are supported\n- Make sure your webcam is positioned directly in front of your face for the best results.")
     ]
 
     for title, content in instructions:
@@ -208,7 +208,7 @@ def show_about_project():
     # Get screen dimensions
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
-    width, height = 650, 750
+    width, height = 650, 800
 
     # Calculate x and y for centered positioning and move it up by 200 pixels
     x = (screen_width // 2) - (width // 2)
@@ -227,23 +227,27 @@ def show_about_project():
     sections = [
         ("Application Purpose", 
         "SitRight aims to encourage healthy posture habits in an era when many of us spend long hours at desks. "
-        "It can be challenging to always remember good posture, so why not let the computer do it for you? "
+        "It can be challenging to remember to maintain good posture while using the computer, so why not let it do it for you? "
         "Whether you’re working, gaming, or browsing the web, SitRight is here to prevent poor posture "
         "by providing gentle reminders to maintain an ideal sitting position."),
 
         ("How It Works", 
-        "SitRight uses your webcam to get a frame of when you’re seated in an optimal posture.\n"
+        "SitRight uses your webcam to get a refrence of when you’re seated in an optimal posture.\n\n"
         "During your session, it monitors for deviations from this position and alerts you when adjustments are needed. "
         ),
 
         ("Why I Created SitRight", 
         "As someone passionate about technology, I spend countless hours at the computer. Maintaining good posture has always been a challenge, "
-        "it’s too easy to get absorbed in work and forget about sitting properly.\n\n"
-        "I created SitRight to tackle this issue, both for myself and for others who spend long hours seated. "
-        "It’s a simple, accessible, and free solution for anyone struggling to maintain good posture."),
+        "it’s too easy to get absorbed in work and forget about sitting properly."
+        "I created SitRight to tackle this issue, both for myself and for others struggling to maintain good posture."
+        "It’s a simple, accessible, and free solution for anyone who spend long hours seated."),
 
         ("Why Use SitRight?", 
-        "lol")
+        "Free: SitRight is completely free to use.\n"
+        "Cross-platform: Works on both macOS and Windows.\n"
+        "User-friendly: Simple setup and intuitive to use.\n"
+        "Convenient: Runs in the background without interruptions.")
+
     ]
 
     for title, content in sections:
