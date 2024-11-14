@@ -380,7 +380,7 @@ def show_splash_screen():
 
     # Load and resize the GIF image
     try:
-        gif_image = Image.open("resources/splashscreen1.gif")
+        gif_image = Image.open("Assets/Assets/resources/splashscreen1.gif")
     except FileNotFoundError:
         messagebox.showerror("Error", "Splash screen GIF not found.")
         root.quit()
@@ -432,7 +432,7 @@ root.geometry("600x400")
 
 if platform.system() == "Windows":
     try:
-        root.iconbitmap("resources/icon.ico")
+        root.iconbitmap("Assets/resources/icon.ico")
     except Exception as e:
         print(f"Error setting icon on Windows: {e}")
 

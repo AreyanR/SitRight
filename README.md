@@ -36,15 +36,15 @@
    * Download Python 3.7 or higher for your operating system:
 
    ### Windows Python Installation - [link](https://www.python.org/downloads/)
-   <img src="media/downloadpywindows.gif" alt="Installing Python on Windows" width="300">
+   <img src="Assets/media/downloadpywindows.gif" alt="Installing Python on Windows" width="300">
 
    ### Mac Python Installation - [link](https://www.python.org/downloads/macos/)
-   <img src="media/downloadpymac.gif" alt="Installing Python on Mac" width="300">
+   <img src="Assets/media/downloadpymac.gif" alt="Installing Python on Mac" width="300">
 
    ### Important Setup Note
    * During Windows installation, make sure to check "Add Python to PATH"
    
-   <img src="media/pytopath.gif" alt="Adding Python to PATH" width="300">
+   <img src="Assets/media/pytopath.gif" alt="Adding Python to PATH" width="300">
 
 2. **Webcam Required**
    * Built-in laptop webcam or external USB webcam
@@ -63,14 +63,14 @@
    * Move and Extract (unzip) the file to your Desktop
    >Note: The folder is required to in your desktop for the next commaand to work
 
-   <img src="media/gettingrepo.gif" alt="Adding Python to PATH" width="300">
+   <img src="Assets/media/gettingrepo.gif" alt="Adding Python to PATH" width="300">
 
 
 
 2. **Open Terminal**
    * Find Terminal in Applications > Utilities or use `Cmd + Space` to search
    
-   <img src="media/terminal.png" alt="Terminal Icon" width="75">
+   <img src="Assets/media/terminal.png" alt="Terminal Icon" width="75">
 
 3.
    **Move to application folder**
@@ -93,7 +93,7 @@
 > For future use, start at Step 1, go to Step 3, and then jump directly to Step 5.
 
 
-<img src="media/terminalcmds.gif" alt="Adding Python to PATH" width="300">
+<img src="Assets/media/terminalcmds.gif" alt="Adding Python to PATH" width="300">
 
 ## Windows Installation Guide
 
@@ -102,14 +102,14 @@
 1. **Open Command Prompt**
    * search for "Windows Powershell" in the Start menu
 
-   <img src="media/Powershell.png" alt="Powershell Icon" width="75">
+   <img src="Assets/media/Powershell.png" alt="Powershell Icon" width="75">
    
 
 2. **Download and Extract**
    * Download the SitRight zip file
    * Exact all the ocntencts into the desktop (important)
 
-    <img src="media/gettingrepo.gif" alt="Adding Python to PATH" width="300">
+    <img src="Assets/media/gettingrepo.gif" alt="Adding Python to PATH" width="300">
 
 3. **Navigate to application**
    * In Command Prompt, first go to your Desktop:
@@ -140,7 +140,7 @@
 
 > Tip: If you get a "python not found" error, try using `py` instead of `python` in the commands above.
 
-<img src="media/powershellcmds.gif" alt="Adding Python to PATH" width="300">
+<img src="Assets/media/powershellcmds.gif" alt="Adding Python to PATH" width="300">
 
 ## Usage Guide for SitRight
 
