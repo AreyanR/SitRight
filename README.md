@@ -26,13 +26,13 @@
 1. **Must have Python**
    * Download Python at python.org/downloads.
    
-<img src="media/DownloadingPy.gif" alt="Downloading Python" width="250">
+<img src="media/DownloadingPy.gif" alt="Downloading Python" width="400">
 
 
 
       * During installation, check "Add Python to PATH."
 
-      ![Downloading Python](media/pythontopath.gif)
+   <img src="media/pythontopath.gif" alt="Downloading Python" width="250">
 
 
 2. **Webcam**
