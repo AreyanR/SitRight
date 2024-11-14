@@ -380,7 +380,7 @@ def show_splash_screen():
 
     # Load and resize the GIF image
     try:
-        gif_image = Image.open("Assets/Assets/resources/splashscreen1.gif")
+        gif_image = Image.open("Assets/resources/splashscreen1.gif")
     except FileNotFoundError:
         messagebox.showerror("Error", "Splash screen GIF not found.")
         root.quit()
