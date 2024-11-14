@@ -22,9 +22,7 @@ The application is simple, intuitive, and runs seamlessly in the background, ens
 * **Posture Monitoring**: Detects user posture in real-time via webcam
 * **Cross-Platform Notifications**: Provides reminders on both macOS and Windows
 * **User-Friendly GUI**: Simple and intuitive graphical user interface
-* **Customizable Reference Posture**: Allows users to set their own baseline posture
-* **Visual Feedback**: Displays real-time posture analysis through the webcam feed
-* **Splash Screen**: A professional loading screen with animated visuals
+webcam and built in laptop cma
 
 ## Installation
 
@@ -50,6 +48,13 @@ python sitright.py
 ```
 
 ## Usage
+
+Opeing the applciton
+
+
+
+
+While in the appaliction:
 1. Launch the application by running `sitright.py`
 2. Set Reference Posture:
    * Sit upright in your preferred posture
@@ -62,13 +67,9 @@ python sitright.py
 For a detailed guide, refer to the "How to Use" section in the application.
 
 ## How It Works
-SitRight utilizes the following technologies:
-* MediaPipe for real-time face detection
-* OpenCV to process webcam feeds and provide visual feedback
-* CustomTkinter for a modern and user-friendly GUI
-* Platform-Specific Notifications:
-   * macOS: AppleScript-based notifications
-   * Windows: plyer library for native notifications
+"SitRight uses your webcam to get a refrence of when you’re seated in an optimal posture.\n\n"
+        "During your session, it monitors for deviations from this position and alerts you when adjustments are needed. "
+
 
 The application calculates head height and position to determine if the user deviates from their baseline posture. If deviations are detected, a notification is triggered.
 
@@ -80,6 +81,12 @@ The application calculates head height and position to determine if the user dev
 * plyer
 * Pillow
 * numpy
+* MediaPipe for real-time face detection
+* OpenCV to process webcam feeds and provide visual feedback
+* CustomTkinter for a modern and user-friendly GUI
+* Platform-Specific Notifications:
+   * macOS: AppleScript-based notifications
+   * Windows: plyer library for native notifications
 
 ### Platform-Specific Tools:
 * macOS: AppleScript for notifications
@@ -90,9 +97,6 @@ pip install -r requirements.txt
 ```
 
 
-
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
 
 ## Contact
 For questions or suggestions, please reach out to:

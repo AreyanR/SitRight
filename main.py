@@ -9,7 +9,14 @@ from plyer import notification
 from PIL import Image, ImageTk
 import tkinter as tk
 import mediapipe as mp
+import os
 
+
+BASE_DIR = os.path.dirname(__file__)
+
+# Construct a path to resources
+splashscreen_path = os.path.join(BASE_DIR, "resources", "splashscreen1.gif")
+icon_path = os.path.join(BASE_DIR, "resources", "icon.ico")
 
 
 # Initialize MediaPipe Face Detection
