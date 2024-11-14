@@ -10,6 +10,8 @@ from PIL import Image, ImageTk
 import tkinter as tk
 import mediapipe as mp
 
+
+
 # Initialize MediaPipe Face Detection
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
@@ -416,7 +418,12 @@ root = ctk.CTk()
 root.withdraw()  # Hide the main window until the splash screen is done
 root.title("SitRight Application")
 root.geometry("600x400")
-root.iconbitmap("resources/icon.ico") 
+
+if platform.system() == "Windows":
+    try:
+        root.iconbitmap("resources/icon.ico")
+    except Exception as e:
+        print(f"Error setting icon on Windows: {e}")
 
 # Set bold font for buttons
 bold_font = ("Arial", 15, "bold")
