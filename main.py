@@ -10,6 +10,10 @@ from PIL import Image, ImageTk
 import tkinter as tk
 import mediapipe as mp
 import os
+import sys
+
+sys.stdout = open(os.devnull, 'w')
+sys.stderr = open(os.devnull, 'w')
 
 
 BASE_DIR = os.path.dirname(__file__)
