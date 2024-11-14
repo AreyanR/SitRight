@@ -19,6 +19,7 @@
 * **Posture Monitoring**: Real-time feedback via webcam.
 * **Cross-Platform**: Works on macOS and Windows.
 * **Simple Interface**: Easy and modern GUI.
+* **Background Application**: Does not interfere with work
 
 
 ## Prerequisites
@@ -45,42 +46,76 @@
 
 > Note: The application works best when webcam is postioned infront of you.
 
-## Installation (macOS)
+## macOS Installation Guide
 
 ### Steps
 
-1. **Open Terminal app**
+1. **Download and Extract**
+   * Download the SitRight zip file
+   * Move and Extract (unzip) the file to your Desktop
+   >Note: The folder is required to in your desktop for the next commaand to work
+
+   <img src="media/gettingrepo.gif" alt="Adding Python to PATH" width="300">
+
+
+
+2. **Open Terminal**
    * Find Terminal in Applications > Utilities or use `Cmd + Space` to search
+   
+   <img src="media/terminal.png" alt="Terminal Icon" width="75">
 
-   <img src="media/terminal.png" alt="terminal" width="75">
-
-2. **Move to Desktop**
+3.
+   **Move to application folder**
    ```bash
-   cd ~/Desktop
+   cd Desktop/SitRight-main
    ```
 
-
-
-4. **Clone the Repository**
-   ```bash
-   git clone https://github.com/username/SitRight.git
-   ```
-
-
-move to folder 
-
-cd SitRight
-
-
-5. **Install Dependencies**
+4. **Install Dependencies** (One-time setup)
    ```bash
    pip3 install -r requirements.txt
    ```
 
-6. **Run the App**
+5. **Launch the App**
    ```bash
-   python3 sitright.py
+   python3 main.py
    ```
+
+> Note: You only need to install dependencies (Step 4) once. For future use, simply start from Step 1 step 3 and to Step 5.
+
+
+<img src="media/terminalcmds.gif" alt="Adding Python to PATH" width="300">
+
+## Windows Installation Guide
+
+### Steps
+
+1. **Open Command Prompt**
+   * search for "Command Prompt" in the Start menu
+   
+
+2. **Download and Extract**
+   * Download the SitRight zip file
+   * Exact all the ocntencts into the desktop (important)
+
+3. **Navigate to Project**
+   * In Command Prompt, first go to your Desktop:
+   ```cmd
+   cd Desktop/Sitright
+   ```
+
+4. **Install Dependencies** (One-time setup)
+   ```cmd
+   pip install -r requirements.txt
+   ```
+
+5. **Launch the App**
+   ```cmd
+   python sitright.py
+   ```
+
+> Note: You only need to install dependencies (Step 4) once. For future use, simply start from Step 1 and jump to Step 5.
+
+> Tip: If you get a "python not found" error, try using `py` instead of `python` in the commands above.
 
 ## Usage
 
