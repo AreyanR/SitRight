@@ -19,7 +19,7 @@
 
 ## Introduction
 
-**SitRight** is a cross-platform program that helps you sit better. It uses your webcam to monitor posture and reminds you to sit correctly. Easy to use, runs in the background, and works on macOS and Windows. SitRight aims to encourage healthy posture habits in an era when many of us spend long hours at desks.
+**SitRight** is a cross-platform program that helps you maintain posture while using the computer. It uses your webcam to monitor posture and reminds you to sit correctly. Its Easy to use, runs in the background, and works on macOS and Windows. SitRight aims to encourage healthy posture habits in an era when many of us spend long hours at desks.
 
 ## Features
 
