@@ -14,94 +14,96 @@
 11. [Contact](#contact)
 
 ## Introduction
-SitRight is a cross-platform application designed to encourage healthy posture habits while working at a computer. Using a webcam and real-time face detection, the application monitors your posture and provides gentle reminders to sit correctly.
+**SitRight** is a cross-platform application designed to help you maintain a healthy posture while working on a computer. By using your webcam, SitRight monitors your posture in real-time and provides gentle reminders to sit correctly.
 
-The application is simple, intuitive, and runs seamlessly in the background, ensuring minimal disruption while helping you maintain ergonomic posture.
+With its easy-to-use interface and minimal resource requirements, SitRight ensures ergonomic habits are as effortless as possible.
 
 ## Features
-* **Posture Monitoring**: Detects user posture in real-time via webcam
-* **Cross-Platform Notifications**: Provides reminders on both macOS and Windows
-* **User-Friendly GUI**: Simple and intuitive graphical user interface
-webcam and built in laptop cma
+* **Posture Monitoring**: Real-time posture analysis using a webcam
+* **Cross-Platform Notifications**: Works seamlessly on macOS and Windows
+* **User-Friendly GUI**: Intuitive and modern graphical interface for ease of use
 
 ## Installation
 
-### Prerequisites:
-* Python 3.7 or later
-* Webcam (internal or external)
+### Prerequisites
+Before you begin, ensure you have the following:
+* Python 3.7 or later installed on your computer
+* A working webcam (internal or external)
 
-### Steps:
-1. Clone this repository:
-```bash
-git clone https://github.com/username/SitRight.git
-cd SitRight
-```
+### Step-by-Step Installation
 
-2. Install the required dependencies:
-```bash
-pip install -r requirements.txt
-```
+1. **Clone the Repository**  
+   First, download the project files from GitHub. Open your terminal or command prompt and run:
+   ```bash
+   git clone https://github.com/username/SitRight.git
+   cd SitRight
+   ```
 
-3. Run the application:
-```bash
-python sitright.py
-```
+2. **Set Up Python Environment** (Optional but recommended)  
+   Create a virtual environment to keep the project dependencies isolated:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # macOS/Linux
+   venv\Scripts\activate     # Windows
+   ```
+
+3. **Install Required Libraries**  
+   Install all dependencies using the provided `requirements.txt` file:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Run the Application**  
+   Launch SitRight by running the main script:
+   ```bash
+   python sitright.py
+   ```
+
+### Troubleshooting
+* If you encounter issues, ensure Python is correctly installed by running `python --version`
+* On macOS, you may need to grant webcam permissions to the terminal or Python
 
 ## Usage
 
-Opeing the applciton
+1. **Launch the Application**  
+   Run the following command in your terminal or command prompt:
+   ```bash
+   python sitright.py
+   ```
 
+2. **Set Your Reference Posture**
+   * Sit upright in your preferred ergonomic posture
+   * Press the **B** key in the webcam feed to set this as your baseline
 
+3. **Posture Monitoring**
+   * SitRight will monitor deviations from your baseline and notify you when corrections are needed
 
+4. **Quit Monitoring**
+   * Press the **Q** key in the webcam feed to stop the session
 
-While in the appaliction:
-1. Launch the application by running `sitright.py`
-2. Set Reference Posture:
-   * Sit upright in your preferred posture
-   * Press the "B" key in the webcam feed to set this posture as the baseline
-3. Posture Monitoring:
-   * The application will monitor your posture and notify you when adjustments are needed
-4. Ending the Session:
-   * Press the "Q" key in the webcam feed to quit monitoring
-
-For a detailed guide, refer to the "How to Use" section in the application.
+For detailed instructions, refer to the "How to Use" section in the application.
 
 ## How It Works
-"SitRight uses your webcam to get a refrence of when you’re seated in an optimal posture.\n\n"
-        "During your session, it monitors for deviations from this position and alerts you when adjustments are needed. "
-
-
-The application calculates head height and position to determine if the user deviates from their baseline posture. If deviations are detected, a notification is triggered.
+SitRight uses a webcam to detect and monitor your posture. By taking a snapshot of your optimal sitting position, the application calculates head height and position to track any deviations. Notifications are sent when adjustments are necessary, helping you maintain a healthy posture throughout the day.
 
 ## Dependencies
-### Python Libraries:
-* customtkinter
-* cv2 (OpenCV)
-* mediapipe
-* plyer
-* Pillow
-* numpy
-* MediaPipe for real-time face detection
-* OpenCV to process webcam feeds and provide visual feedback
-* CustomTkinter for a modern and user-friendly GUI
-* Platform-Specific Notifications:
-   * macOS: AppleScript-based notifications
-   * Windows: plyer library for native notifications
-
-### Platform-Specific Tools:
-* macOS: AppleScript for notifications
+The following Python libraries are required:
+* `customtkinter`: For the modern GUI
+* `cv2` (OpenCV): To process webcam feeds
+* `mediapipe`: For real-time posture detection
+* `plyer`: For cross-platform notifications
+* `Pillow`: For image handling
+* `numpy`: For numerical computations
 
 Install all dependencies using:
 ```bash
 pip install -r requirements.txt
 ```
 
-
-
 ## Contact
-For questions or suggestions, please reach out to:
+For questions, suggestions, or feedback, feel free to reach out:
 * **Author**: Areyan Rastawan
-* **GitHub**: https://github.com/AreyanR
+* **GitHub**: AreyanR
 * **Email**: areyanrastawan@example.com
 
-Thank you for using SitRight! We hope this tool helps you maintain a healthy and ergonomic posture. 🎉
+Thank you for choosing SitRight! We hope this tool helps you stay healthy and ergonomic. 🎉
