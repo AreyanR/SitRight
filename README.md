@@ -35,13 +35,13 @@
 1. **Python Installation Required**
    * Download Python 3.7 or higher for your operating system:
 
-   ### Windows Python Installation - [link](https://www.python.org/downloads/)
+   ### Windows Python Installation - [link](https://www.python.org/downloads/release/python-31110/)
    <img src="media/downloadpywindows.gif" alt="Installing Python on Windows" width="300">
 
-   ### Mac Python Installation - [link](https://www.python.org/downloads/macos/)
+   ### Mac Python Installation - [link](https://www.python.org/ftp/python/3.11.9/python-3.11.9-macos11.pkg)
    <img src="media/downloadpymac.gif" alt="Installing Python on Mac" width="300">
 
-   ### Important Setup Note
+   ### Important Setup Note ( Windows Only )
    * During Windows installation, make sure to check "Add Python to PATH"
    
    <img src="media/pytopath.gif" alt="Adding Python to PATH" width="300">
@@ -59,7 +59,7 @@
 ### Steps
 
 1. **Download and Extract**
-   * Download the SitRight zip file
+   * Download the SitRight zip file located at the top of this git page
    * Move and Extract (unzip) the file to your Desktop
    >Note: The folder is required to in your desktop for the next commaand to work
 
@@ -212,14 +212,22 @@ I created **SitRight** to tackle this issue, both for myself and for others stru
 * **Pillow**: Processes images and animations like the splash screen GIF.
 * **numpy**: Calculates averages for accurate posture monitoring.
 
+---
+
+### Known Issues:
+A common issue on macOS occurs when the system asks for camera access permissions the first time you try to start the monitor. Sometimes, the attempt might fail initially, likely because macOS only allows access after the permission prompt has been addressed.
+
+**Fix:**  
+Simply try pressing the "Start Monitoring" button again, and it should work.
+
+
 
 ## Contact
 
 **Author**: Areyan Rastawan  
 **LinkedIn**: [Areyan Rastawan](https://www.linkedin.com/in/areyan-rastawan-bb757a259/)  
 **GitHub**: [AreyanR](https://github.com/AreyanR?tab=repositories)  
-**Portfolio**: [Personal Website](https://ix.cs.uoregon.edu/~areyanr/)
+**Portfolio**: [Personal Website](https://ix.cs.uoregon.edu/~areyanr/)  
+**Email**: areyanr@hotmail.com
 
 ---
-
-Thank you for using SitRight
