@@ -29,15 +29,15 @@
      * [Mac Download](https://www.python.org/downloads/macos/)
 
    ### Windows Python Installation
-   <img src="media/1.gif" alt="Installing Python on Windows" width="300">
+   <img src="media/downloadpywindows.gif" alt="Installing Python on Windows" width="300">
 
    ### Mac Python Installation
-   <img src="media/downlaodpythonmac.gif" alt="Installing Python on Mac" width="300">
+   <img src="media/downloadpymac.gif" alt="Installing Python on Mac" width="300">
 
    ### Important Setup Note
    * During Windows installation, make sure to check "Add Python to PATH"
    
-   <img src="media/pythontopath.gif" alt="Adding Python to PATH" width="300">
+   <img src="media/pytopath.gif" alt="Adding Python to PATH" width="300">
 
 2. **Webcam Required**
    * Built-in laptop webcam or external USB webcam
