@@ -23,20 +23,27 @@
 
 ## Prerequisites
 
-1. **Must have Python**
-   * Download Python at python.org/downloads.
+1. **Python Installation Required**
+   * Download Python 3.7 or higher for your operating system:
+     * [Windows Download](https://www.python.org/downloads/)
+     * [Mac Download](https://www.python.org/downloads/macos/)
+
+   ### Windows Python Installation
+   <img src="media/1.gif" alt="Installing Python on Windows" width="300">
+
+   ### Mac Python Installation
+   <img src="media/downlaodpythonmac.gif" alt="Installing Python on Mac" width="300">
+
+   ### Important Setup Note
+   * During Windows installation, make sure to check "Add Python to PATH"
    
-<img src="media/DownloadingPy.gif" alt="Downloading Python" width="400">
+   <img src="media/pythontopath.gif" alt="Adding Python to PATH" width="300">
+
+2. **Webcam Required**
+   * Built-in laptop webcam or external USB webcam
 
 
-
-      * During installation, check "Add Python to PATH."
-
-   <img src="media/pythontopath.gif" alt="Downloading Python" width="250">
-
-
-2. **Webcam**
-   * Make sure you have a Webcam (built-in or external).
+> Note: The application works best when webcam is postioned infront of you.
 
 ## Installation (macOS)
 
@@ -45,21 +52,25 @@
 1. **Open Terminal app**
    * Find Terminal in Applications > Utilities or use `Cmd + Space` to search
 
-2. **Go to Desktop**
+   <img src="media/terminal.png" alt="terminal" width="75">
+
+2. **Move to Desktop**
    ```bash
    cd ~/Desktop
    ```
 
-3. **Verify Python Installation**
-   ```bash
-   python3 --version
-   ```
+
 
 4. **Clone the Repository**
    ```bash
    git clone https://github.com/username/SitRight.git
-   cd SitRight
    ```
+
+
+move to folder 
+
+cd SitRight
+
 
 5. **Install Dependencies**
    ```bash
