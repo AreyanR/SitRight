@@ -107,7 +107,7 @@
 
 2. **Download and Extract**
    * Download the SitRight zip file
-   * Exact all the ocntencts into the desktop (important)
+   * Exrtact all the contents into the desktop (important)
 
     <img src="media/gettingrepo.gif" alt="Adding Python to PATH" width="300">
 
