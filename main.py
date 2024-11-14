@@ -74,7 +74,7 @@ def start_posture_reminder_gui():
     # Check if the webcam is accessible
     if not cap.isOpened():
         # Re-enable the "Use" button and show an error message if the webcam cannot be accessed
-        use_button.configure(text="Use", state="normal")
+        use_button.configure(text="Start Monitoring", state="normal")
         messagebox.showerror("Error", "Cannot access webcam. Make sure it is not in use by another application and has permission.")
         return
 
@@ -86,7 +86,7 @@ def start_posture_reminder_gui():
 
     # Restore the main GUI window after posture monitoring ends
     root.deiconify()
-    use_button.configure(text="Use", state="normal")  # Re-enable the Use button
+    use_button.configure(text="Start Monitoring", state="normal")  # Re-enable the Use button
 
 def start_posture_reminder(cap):
     """
@@ -233,7 +233,7 @@ def show_how_to_use():
 
     # Frame for each section
     instructions = [
-        ("Step 1: Start the Program", "Press the 'Use' button to begin."),
+        ("Step 1: Start the Program", "Press the 'Start Monitoring' button to begin."),
         ("Step 2: Set Your Posture", "- Sit in a comfortable, upright position.\n- Press the 'B' key to save this as your refrence posture."),
         ("Step 3: Let the Program Monitor Your Posture", "You can continue working, and the program will alert you if you move out of your set posture."),
         ("Step 4: End the Session", "To stop the session, press the 'Q' key in the camera window."),
@@ -344,7 +344,7 @@ def load_main_menu():
 
     global use_button
     use_button = ctk.CTkButton(
-        frame, text="Use", command=start_posture_reminder_gui, height=40, width=200, 
+        frame, text="Start Monitoring", command=start_posture_reminder_gui, height=40, width=200, 
         fg_color="#e08814", hover_color="#CC7000", font=bold_font
     )
     use_button.pack(pady=10)

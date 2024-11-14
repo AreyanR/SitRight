@@ -136,7 +136,7 @@
 ## Usage Guide for SitRight
 
 ### 1. Launch Application
-* Click the "Start" button in the interface
+* Click the "Start Monitoring" button in the interface
 * The webcam feed will automatically open in a new window
 
 ### 2. Set Reference Posture
