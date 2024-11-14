@@ -100,7 +100,7 @@
 1. **Open Command Prompt**
    * search for "Windows Powershell" in the Start menu
 
-   <img src="media/powershell.png" alt="Terminal Icon" width="75">
+   <img src="media/Powershell.png" alt="Powershell Icon" width="75">
    
 
 2. **Download and Extract**
