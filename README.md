@@ -23,9 +23,17 @@
 
 ## Prerequisites
 
-1. **Python 3.7 or Later**
-   * Download Python: python.org/downloads.
+1. **Must have Python**
+   * Download Python at python.org/downloads.
+   
+<img src="media/DownloadingPy.gif" alt="Downloading Python" width="250">
+
+
+
       * During installation, check "Add Python to PATH."
+
+      ![Downloading Python](media/pythontopath.gif)
+
 
 2. **Webcam**
    * Make sure you have a Webcam (built-in or external).
@@ -34,35 +42,31 @@
 
 ### Steps
 
-1. **Open Terminal**
-   * Find Terminal in Applications > Utilities or use `Cmd + Space` to search.
+1. **Open Terminal app**
+   * Find Terminal in Applications > Utilities or use `Cmd + Space` to search
 
 2. **Go to Desktop**
    ```bash
    cd ~/Desktop
    ```
 
-   * Verify installation:
-     ```bash
-     python3 --version
-     ```
+3. **Verify Python Installation**
+   ```bash
+   python3 --version
+   ```
 
-3. **Clone the Repository**
+4. **Clone the Repository**
    ```bash
    git clone https://github.com/username/SitRight.git
-   
-   
-
-   move to the project folder 
    cd SitRight
    ```
 
-4. **Install Dependencies**
+5. **Install Dependencies**
    ```bash
    pip3 install -r requirements.txt
    ```
 
-5. **Run the App**
+6. **Run the App**
    ```bash
    python3 sitright.py
    ```
