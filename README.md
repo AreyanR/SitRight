@@ -88,7 +88,9 @@
    python3 main.py
    ```
 
-> Note: You only need to install dependencies (Step 4) once. For future use, simply start from Step 2 step 3 and to Step 5.
+>**Note:** You only need to install the dependencies (Step 4) once during the initial setup. 
+
+> For future use, start at Step 1, go to Step 3, and then jump directly to Step 5.
 
 
 <img src="media/terminalcmds.gif" alt="Adding Python to PATH" width="300">
@@ -125,9 +127,16 @@
    python main.py 
    ```
    or 
+   
+   ```cmd
    py main.py 
+   ``` 
 
-> Note: You only need to install dependencies (Step 4) once. For future use, simply start from Step 1 and jump to Step 5.
+
+> **Note:** You only need to install the dependencies (Step 4) once during the initial setup.  
+
+> For future use, start at Step 1, go to Step 3, and then jump directly to Step 5.
+
 
 > Tip: If you get a "python not found" error, try using `py` instead of `python` in the commands above.
 
