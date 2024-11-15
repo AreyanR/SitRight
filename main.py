@@ -404,25 +404,22 @@ def show_splash_screen():
     gif_label = tk.Label(splash_root, bg="#2b2b2a")  # Set background to grey
     gif_label.place(relx=0.5, rely=0.5, anchor='center')
 
-    # Loading label for animated text
-    loading_label = tk.Label(splash_root, text="Loading", font=("Helvetica", 20, "bold"), bg="#2b2b2a", fg="white")
-    loading_label.place(relx=0.5, rely=0.8, anchor='center')
 
     # Function to animate GIF and loading text together
-    def animate_gif_and_text(gif_label, gif_frames, loading_label, frame_index=0, count=0):
+        # Remove the Loading label
+    # Function to animate GIF without loading text
+    def animate_gif(gif_label, gif_frames, frame_index=0):
         # Update GIF frame
         gif_label.config(image=gif_frames[frame_index])
-        # Update Loading text
-        dots = "." * (count % 4)  # Cycle between no dots, 1 dot, 2 dots, and 3 dots
-        loading_label.config(text=f"Loading{dots}")
-        # Schedule next update for both GIF and text
-        gif_label.after(600, animate_gif_and_text, gif_label, gif_frames, loading_label, (frame_index + 1) % len(gif_frames), count + 1)
+        # Schedule next update for GIF
+        gif_label.after(600, animate_gif, gif_label, gif_frames, (frame_index + 1) % len(gif_frames))
 
-    # Start the combined GIF and text animation
-    animate_gif_and_text(gif_label, gif_frames, loading_label)
+    # Start the GIF animation
+    animate_gif(gif_label, gif_frames)
 
     # Destroy splash screen and load main menu after 4 seconds
     splash_root.after(4000, lambda: [splash_root.destroy(), load_main_menu()])
+
 
 # Main entry point
 root = ctk.CTk()
