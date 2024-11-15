@@ -30,7 +30,7 @@
 ## Prerequisites
 
 ### 1. Python Installation Required
-* Download Python 3.7 or higher for your operating system
+* Download Python 3.7 up to 3.11 for your operating system
 * Use these official links for the correct versions:
 
 #### Windows Python Installation

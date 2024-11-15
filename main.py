@@ -234,10 +234,10 @@ def show_how_to_use():
     # Frame for each section
     instructions = [
         ("Step 1: Start the Program", "Press the 'Start Monitoring' button to begin."),
-        ("Step 2: Set Your Posture", "- Sit in a comfortable, upright position.\n- Press the 'B' key to save this as your refrence posture."),
+        ("Step 2: Set Your Posture", "- Sit in a comfortable, upright position.\n- Press the 'B' key to save this as your reference posture."),
         ("Step 3: Let the Program Monitor Your Posture", "You can continue working, and the program will alert you if you move out of your set posture."),
         ("Step 4: End the Session", "To stop the session, press the 'Q' key in the camera window."),
-        ("Uses", "This tool can be used for any task that involves sitting and using your computer. It can run in the background of any application"),
+        ("Uses", "This tool can be used for any task that involves sitting and using your computer. It can run in the background of any application."),
         ("Note", "- Both external and built-in laptop cameras are supported\n- Make sure your webcam is positioned directly in front of your face for the best results.")
     ]
 
@@ -286,7 +286,7 @@ def show_about_project():
         "by providing gentle reminders to maintain an ideal sitting position."),
 
         ("How It Works", 
-        "SitRight uses your webcam to get a refrence of when you’re seated in an optimal posture.\n\n"
+        "SitRight uses your webcam to get a reference of when you’re seated in an optimal posture.\n\n"
         "During your session, it monitors for deviations from this position and alerts you when adjustments are needed. "
         ),
 
