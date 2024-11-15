@@ -1,6 +1,6 @@
 # SitRight: Posture Reminder Application
 <div align="center">
-  <img src="resources/splashscreen1.gif" alt="Adding Python to PATH" width="300" height="150">
+  <img src="resources/splashscreen1.gif" alt="Splashscreen" width="300" height="150">
 </div>
 
 ## Table of Contents
@@ -66,7 +66,7 @@
    * Download the SitRight zip file from the top of this page
    * Move and Extract (unzip) the file to your Desktop
 
-   <img src="media/gettingrepo.gif" alt="Adding Python to PATH" width="300">
+   <img src="media/gettingrepo.gif" alt="GettingRepoGif" width="300">
 
 2. **Open Terminal**
    * Find Terminal in Applications > Utilities
@@ -87,7 +87,7 @@ Quick start for future use (copy entire line):
 cd Desktop/SitRight-main && python3 main.py
 ```
 
->Note: Only use the setup command once. For future use, run the quick start command.
+>Note: Only use the setup command once. For future use, open a new terminal, run the quick start command.
 
 <img src="media/terminalcmds.gif" alt="Terminal Commands" width="300">
 
@@ -106,7 +106,7 @@ cd Desktop/SitRight-main && python3 main.py
    * Download the SitRight zip file
    * Extract all contents to your Desktop
 
-   <img src="media/gettingrepo.gif" alt="Adding Python to PATH" width="300">
+   <img src="media/gettingrepo.gif" alt="GettingRepoGif" width="300">
 
 3. **Installation Commands**
 
@@ -137,7 +137,7 @@ Quick start with py (copy entire line):
 ```cmd
 cd Desktop/SitRight-main && py main.py
 ```
->Note: Only use the setup command once. For future use, run the quick start command.
+>Note: Only use the setup command once. For future use, open a new Powershell run the quick start command.
 
 
 <img src="media/Powershellcmds.gif" alt="powershell Commands" width="300">
