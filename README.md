@@ -139,6 +139,9 @@ cd Desktop/SitRight-main && py main.py
 ```
 >Note: Only use the setup command once. For future use, run the quick start command.
 
+
+<img src="media/Powershellcmds.gif" alt="powershell Commands" width="300">
+
 ## Usage Guide for SitRight
 
 > **Important**: Make sure your machine is not in Do Not Disturb/Focus mode
