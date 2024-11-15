@@ -105,7 +105,7 @@ def start_posture_reminder(cap):
     # Initialize baseline posture variables and timing for reminders
     baseline_head_height, baseline_head_position = None, None
     last_reminder_time = 0
-    cooldown_period = 5  # seconds between reminders
+    cooldown_period = 10  # seconds between reminders
 
     # State variables for managing status messages
     baseline_set = False
