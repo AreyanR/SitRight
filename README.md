@@ -169,7 +169,7 @@ cd Desktop/SitRight-main && py main.py
 
 ## Why I Created SitRight
 
-As someone passionate about technology, I spend countless hours at the computer. Maintaining good posture has always been a challenge—it's too easy to get absorbed in work and forget about sitting properly.
+As someone passionate about technology, I spend countless hours at the computer. Maintaining good posture has always been a challenge, it's too easy to get absorbed in work and forget about sitting properly.
 
 I created **SitRight** to tackle this issue, both for myself and for others struggling to maintain good posture. It's a simple, accessible, and free solution designed to help anyone who spends long hours seated stay mindful of their posture and avoid discomfort or long-term health problems.
 
